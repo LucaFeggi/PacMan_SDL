@@ -1,18 +1,18 @@
 class Pinky : public Ghost{
 	public:
-		Pinky();
-		void CalculateTarget(Entity mPac);
-		void UpdatePos(unsigned char ActualBoard[], Pac &mPac, bool TimedStatus);
+		Pinky(Timer &timer, Pac &pacman);
+		void CalculateTarget(Pac &mPac);
 };
 
-Pinky::Pinky() : Ghost(Pink, EntityType::ePinky){
+Pinky::Pinky(Timer &timer, Pac &pacman) : Ghost(Pink, EntityType::ePinky, timer, pacman){
 	this->ScatterTarget.ModCoords(2 * BlockSize24 + BlockSize24 / 2, BlockSize24 / 2);
 	this->Home.ModCoords(13 * BlockSize24 + BlockSize24 / 2, 17 * BlockSize24 + BlockSize24 / 2);
+	this->ModFacing(1);
 }
 
-void Pinky::CalculateTarget(Entity mPac){
-	short x = mPac.GetX();
-	short y = mPac.GetY();
+void Pinky::CalculateTarget(Pac &mPac) {
+	short x = mPac.GetPos().GetX();
+	short y = mPac.GetPos().GetY();
 	switch(mPac.GetDirection()){
 		case Right:
 			x += 4 * BlockSize24;
@@ -30,17 +30,4 @@ void Pinky::CalculateTarget(Entity mPac){
 			break;
 	}
 	this->Target.ModCoords(x, y);
-}
-
-void Pinky::UpdatePos(unsigned char ActualBoard[], Pac &mPac, bool TimedStatus){
-	this->UpdateSpeed(mPac);
-	this->UpdateStatus(mPac, TimedStatus);
-	for(unsigned char i = 0; i < this->GetSpeed(); i++){
-		this->UpdateFacing(mPac);
-		if(this->IsTargetToCalculate(mPac))
-			this->CalculateTarget(mPac);
-		this->CalculateDirection(ActualBoard);
-		this->Move(this->GetDirection());
-		this->CheckWrap();
-	}
 }

@@ -1,6 +1,6 @@
 class Ghost : public Entity{
 	public:
-		Ghost(SDL_Color MyColor, EntityType MyIdentity);
+		Ghost(SDL_Color MyColor, EntityType MyIdentity, Timer &MyTimer, Pac &Pacman);
 		~Ghost();
 		bool IsTargetToCalculate(Pac &mPac);
 		void PossDirsBubbleSort(std::vector<float> &Distances, std::vector<unsigned char> &PossibleDirections);
@@ -10,7 +10,10 @@ class Ghost : public Entity{
 		void UpdateStatus(Pac &mPac, bool TimedStatus);
 		void UpdateFacing(Pac &mPac);
 		void UpdateSpeed(Pac &mPac);
-		void Draw(Pac &mPac, Timer mGhostTimer, unsigned short mTimerTarget);
+		void UpdatePosition(unsigned char board[], Pac &mPac, bool TimedStatus);
+		virtual void CalculateTarget(Pac &mPac) = 0;
+		void Draw();
+		void SetScatterTime(unsigned short value) { ScatterTime = value; }
 		Position Target;
 		Position ScatterTarget;
 		Position DoorTarget;
@@ -22,11 +25,14 @@ class Ghost : public Entity{
 		SDL_Rect GhostEyeSpriteClips[GhostEyeFrames];
 		SDL_Color Color;
 		unsigned char CurrentBodyFrame;
+		unsigned short ScatterTime;
 		bool CanUseDoor;
 		bool Status; // false -> chase	true -> scatter
+		Timer MyTimer;
+		Pac &pacman;
 };
 
-Ghost::Ghost(SDL_Color MyColor, EntityType MyIdentity) : Entity(MyIdentity){
+Ghost::Ghost(SDL_Color MyColor, EntityType MyIdentity, Timer &MyTimer, Pac &Pacman) : Entity(MyIdentity), pacman(Pacman){
 	Body.loadFromFile("Textures/GhostBody32.png");
 	Eyes.loadFromFile("Textures/GhostEyes32.png");
 	InitFrames(GhostBodyFrames, GhostBodySpriteClips);
@@ -36,6 +42,7 @@ Ghost::Ghost(SDL_Color MyColor, EntityType MyIdentity) : Entity(MyIdentity){
 	CanUseDoor = false;
 	Status = false;
 	DoorTarget.ModCoords(13 * BlockSize24 + BlockSize24 / 2, 15 * BlockSize24);
+	this->MyTimer = MyTimer;
 }
 
 Ghost::~Ghost(){
@@ -56,7 +63,7 @@ bool Ghost::IsTargetToCalculate(Pac &mPac){
 	if(this->IsHome() && mPac.IsEnergized()){
 		if(this->GetPos() == Home.GetPos())
 			Target.ModY(this->Home.GetY() - BlockSize24);
-		else if(this->GetX() == Home.GetX() && this->GetY() == Home.GetY() - BlockSize24)
+		else if(this->GetPos().GetX() == Home.GetX() && this->GetPos().GetY() == Home.GetY() - BlockSize24)
 			Target.ModY(this->Home.GetY());		
 		return false;
 	}
@@ -97,8 +104,8 @@ void Ghost::CalculateDirection(unsigned char ActualMap[]){
 	std::vector<float> Distances;
 	std::vector<unsigned char> PossibleDirections;
 	for(unsigned char i = 0; i < 4; i++){
-		short x = this->GetX();
-		short y = this->GetY();
+		short x = this->GetPos().GetX();
+		short y = this->GetPos().GetY();
 		this->GetPossiblePosition(x, y, i);
 		if(!this->WallCollision(x, y, ActualMap, CanUseDoor)){
 			float DistX = abs(x - this->Target.GetX());
@@ -126,8 +133,8 @@ void Ghost::CalculateDirection(unsigned char ActualMap[]){
 }
 
 bool Ghost::IsHome(){
-	if(this->GetX() > 11 * BlockSize24 && this->GetX() < 17 * BlockSize24){
-		if(this->GetY() > 15 * BlockSize24 && this->GetY() < 18 * BlockSize24)
+	if(this->GetPos().GetX() > 11 * BlockSize24 && this->GetPos().GetX() < 17 * BlockSize24){
+		if(this->GetPos().GetY() > 15 * BlockSize24 && this->GetPos().GetY() < 18 * BlockSize24)
 			return true;
 	}
 	return false;
@@ -198,11 +205,24 @@ void Ghost::UpdateSpeed(Pac &mPac){
 	
 }
 
-void Ghost::Draw(Pac &mPac, Timer mGhostTimer, unsigned short mTimerTarget){
-	if(mPac.IsEnergized() && this->IsAlive() && !this->IsHome()){
+void Ghost::UpdatePosition(unsigned char board[], Pac &mPac, bool TimedStatus) {
+	this->UpdateSpeed(mPac);
+	this->UpdateStatus(mPac, TimedStatus);
+	for(unsigned char i = 0; i < this->GetSpeed(); i++){
+		this->UpdateFacing(mPac);
+		if(this->IsTargetToCalculate(mPac))
+			this->CalculateTarget(mPac);
+		this->CalculateDirection(board);
+		this->Move(this->GetDirection());
+		this->CheckWrap();
+	}
+}
+
+void Ghost::Draw() {
+	if(pacman.IsEnergized() && this->IsAlive() && !this->IsHome()){
 		Body.setColor(0, 0, 255);
-		if(mGhostTimer.GetTicks() > mTimerTarget - 2000){
-			if((mGhostTimer.GetTicks() / 250) % 2 == 1){
+		if(MyTimer.GetTicks() > ScatterTime - 2000){
+			if((MyTimer.GetTicks() / 250) % 2 == 1){
 				Body.setColor(255, 255, 255);
 				Eyes.setColor(255, 0, 0);
 			}
@@ -221,13 +241,12 @@ void Ghost::Draw(Pac &mPac, Timer mGhostTimer, unsigned short mTimerTarget){
 		
 	if(this->IsAlive()){
 		CurrentClip = &GhostBodySpriteClips[CurrentBodyFrame / GhostBodyFrames];
-		Body.render(this->GetX() - 4, this->GetY() - 4, 0, CurrentClip);
+		Body.render(this->GetPos().GetX() - 4, this->GetPos().GetY() - 4, 0, CurrentClip);
 	}
 	CurrentClip = &GhostEyeSpriteClips[this->GetFacing()];
-	Eyes.render(this->GetX() - 4, this->GetY() - 4, 0, CurrentClip);
+	Eyes.render(this->GetPos().GetX() - 4, this->GetPos().GetY() - 4, 0, CurrentClip);
 	CurrentBodyFrame++;
 	if(CurrentBodyFrame / GhostBodyFrames >= GhostBodyFrames){
 		CurrentBodyFrame = 0;
 	}
-	
 }
