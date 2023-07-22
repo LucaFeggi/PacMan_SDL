@@ -13,7 +13,7 @@ class Ghost : public Entity{
 		void UpdatePosition(unsigned char board[], Pac &mPac, bool TimedStatus);
 		virtual void CalculateTarget(Pac &mPac) = 0;
 		void Draw();
-		void SetScatterTime(unsigned short value) { ScatterTime = value; }
+		void SetScatterTime(unsigned short &value) { ScatterTime = value; }
 		Position Target;
 		Position ScatterTarget;
 		Position DoorTarget;
