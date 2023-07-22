@@ -3,6 +3,7 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
+#include <iostream>
 #include <cmath>
 #include <string>
 #include <sstream>

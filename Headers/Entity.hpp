@@ -1,4 +1,4 @@
-class Entity : public Position{
+class Entity{
 	public:
 		Entity(EntityType MyIdentity);
 		unsigned char GetIdentity();
@@ -16,12 +16,15 @@ class Entity : public Position{
 		void Move(unsigned char mover);
 		void CheckWrap();
 		bool IsColliding(Position other);
+		Position &GetPos() { return mPosition; }
+		virtual void Draw() = 0;
 	private:
 		unsigned char Identity;
 		unsigned char Speed;
 		unsigned char Direction;
 		unsigned char Facing;
 		bool LifeStatement;
+		Position mPosition;
 };
 
 Entity::Entity(EntityType MyIdentity){
@@ -132,16 +135,16 @@ bool Entity::WallCollision(short x, short y, unsigned char ActualMap[], bool Can
 void Entity::Move(unsigned char mover){
 	switch(mover){
 		case Right:
-			this->ModX(this->GetX() + 1);
+			mPosition.ModX(mPosition.GetX() + 1);
 			break;
 		case Up:
-			this->ModY(this->GetY() - 1);
+			mPosition.ModY(mPosition.GetY() - 1);
 			break;
 		case Left:
-			this->ModX(this->GetX() - 1);
+			mPosition.ModX(mPosition.GetX() - 1);
 			break;
 		case Down:
-			this->ModY(this->GetY() + 1);
+			mPosition.ModY(mPosition.GetY() + 1);
 			break;
 		default:
 			break;
@@ -149,15 +152,15 @@ void Entity::Move(unsigned char mover){
 }
 
 void Entity::CheckWrap(){
-	if(this->GetX() > WindowWidth + BlockSize24)
-		this->ModX(-BlockSize24);
-	if(this->GetX() < -BlockSize24)
-		this->ModX(WindowWidth + BlockSize24);
+	if(mPosition.GetX() > WindowWidth + BlockSize24)
+		mPosition.ModX(-BlockSize24);
+	if(mPosition.GetX() < -BlockSize24)
+		mPosition.ModX(WindowWidth + BlockSize24);
 }
 
 bool Entity::IsColliding(Position other){
-	if(other.GetX() > this->GetX() - BlockSize24 && other.GetX() < this->GetX() + BlockSize24){
-		if(other.GetY() > this->GetY() - BlockSize24 && other.GetY() < this->GetY() + BlockSize24)
+	if(other.GetX() > mPosition.GetX() - BlockSize24 && other.GetX() < mPosition.GetX() + BlockSize24){
+		if(other.GetY() > mPosition.GetY() - BlockSize24 && other.GetY() < mPosition.GetY() + BlockSize24)
 			return true;
 	}
 	return false;

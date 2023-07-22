@@ -85,28 +85,28 @@ void Board::ResetPosition(Entity &mEntity){
 		if(x == 0)
 			y++;
 		if(CharBoard[i] == '0' && mEntity.GetIdentity() == EntityType::ePacMan){
-			mEntity.ModX(x * BlockSize24 + BlockSize24/2);
-			mEntity.ModY(y * BlockSize24);
+			mEntity.GetPos().ModX(x * BlockSize24 + BlockSize24/2);
+			mEntity.GetPos().ModY(y * BlockSize24);
 			return;
 		}
 		else if(CharBoard[i] == '1' && mEntity.GetIdentity() == EntityType::eBlinky){
-			mEntity.ModX(x * BlockSize24 + BlockSize24/2);
-			mEntity.ModY(y * BlockSize24);
+			mEntity.GetPos().ModX(x * BlockSize24 + BlockSize24/2);
+			mEntity.GetPos().ModY(y * BlockSize24);
 			return;
 		}
 		else if(CharBoard[i] == '2' && mEntity.GetIdentity() == EntityType::eInky){
-			mEntity.ModX(x * BlockSize24 + BlockSize24/2);
-			mEntity.ModY(y * BlockSize24);
+			mEntity.GetPos().ModX(x * BlockSize24 + BlockSize24/2);
+			mEntity.GetPos().ModY(y * BlockSize24);
 			return;
 		}
 		else if(CharBoard[i] == '3' && mEntity.GetIdentity() == EntityType::ePinky){
-			mEntity.ModX(x * BlockSize24 + BlockSize24/2);
-			mEntity.ModY(y * BlockSize24);
+			mEntity.GetPos().ModX(x * BlockSize24 + BlockSize24/2);
+			mEntity.GetPos().ModY(y * BlockSize24);
 			return;
 		}
 		else if(CharBoard[i] == '4' && mEntity.GetIdentity() == EntityType::eClyde){
-			mEntity.ModX(x * BlockSize24 + BlockSize24/2);
-			mEntity.ModY(y * BlockSize24);
+			mEntity.GetPos().ModX(x * BlockSize24 + BlockSize24/2);
+			mEntity.GetPos().ModY(y * BlockSize24);
 			return;
 		}
 	}

@@ -42,8 +42,8 @@ Pac::~Pac(){
 
 void Pac::UpdatePos(std::vector<unsigned char> &mover, unsigned char ActualMap[]){
 	for(unsigned char i = 0; i < this->GetSpeed(); i++){
-		short TempX = this->GetX();
-		short TempY = this->GetY();
+		short TempX = this->GetPos().GetX();
+		short TempY = this->GetPos().GetY();
 		this->GetPossiblePosition(TempX, TempY, mover.at(0));
 		if(!this->WallCollision(TempX, TempY, ActualMap)){
 			this->UpdateCurrentLivingPacFrame();
@@ -54,8 +54,8 @@ void Pac::UpdatePos(std::vector<unsigned char> &mover, unsigned char ActualMap[]
 		else
 			this->WallCollisionFrame();
 		if(mover.size() != 1 && mover.at(0) != mover.at(1)){
-			TempX = this->GetX();
-			TempY = this->GetY();
+			TempX = this->GetPos().GetX();
+			TempY = this->GetPos().GetY();
 			this->GetPossiblePosition(TempX, TempY, mover.at(1));
 			if(!this->WallCollision(TempX, TempY, ActualMap)){
 				this->UpdateCurrentLivingPacFrame();
@@ -70,8 +70,8 @@ void Pac::UpdatePos(std::vector<unsigned char> &mover, unsigned char ActualMap[]
 }
 
 unsigned char Pac::FoodCollision(unsigned char ActualMap[]){
-	float cell_x = this->GetX() / static_cast<float>(BlockSize24);
-	float cell_y = this->GetY() / static_cast<float>(BlockSize24);
+	float cell_x = this->GetPos().GetX() / static_cast<float>(BlockSize24);
+	float cell_y = this->GetPos().GetY() / static_cast<float>(BlockSize24);
 	Position BoardPos;
 	for(unsigned char SideDir = 0; SideDir < 4; SideDir++){
 		this->CharBoardPos(SideDir, BoardPos, cell_x, cell_y);
@@ -140,11 +140,11 @@ void Pac::WallCollisionFrame(){
 void Pac::Draw(){
 	if(this->IsAlive()){
 		CurrentClip = &LivingPacSpriteClips[CurrLivingPacFrame / (LivingPacFrames * 4)];
-		LivingPac.render(this->GetX() - 4, this->GetY() - 4, this->GetFacing(), CurrentClip);
+		LivingPac.render(this->GetPos().GetX() - 4, this->GetPos().GetY() - 4, this->GetFacing(), CurrentClip);
 	}
 	else{
 		CurrentClip = &DeathPacSpriteClips[CurrDeathPacFrame / DeathPacFrames];
-		DeathPac.render(this->GetX() - 4, this->GetY() - 4, this->GetFacing(), CurrentClip);
+		DeathPac.render(this->GetPos().GetX() - 4, this->GetPos().GetY() - 4, this->GetFacing(), CurrentClip);
 		CurrDeathPacFrame++;
 		if(CurrDeathPacFrame / DeathPacFrames >= DeathPacFrames){
 			DeadAnimationStatement = true;

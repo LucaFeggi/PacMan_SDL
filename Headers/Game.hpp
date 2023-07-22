@@ -3,7 +3,6 @@ class Game{
 		Game();
 		~Game();
 		void ResetGhostsLifeStatement();
-		void ResetGhostsFacing();
 		void Start();
 		void ModStartStatement(bool NewStartStatement);
 		void Clock();
@@ -32,6 +31,8 @@ class Game{
 		Inky mInky;
 		Pinky mPinky;
 		Clyde mClyde;
+		Ghost *mGhosts[4];
+		std::vector<Entity*> mDrawables;
 		Fruit mFruit;
 		Timer MapAnimationTimer;
 		LTexture Ready;
@@ -56,7 +57,11 @@ class Game{
 		unsigned char DeadGhostsCounter;
 };
 
-Game::Game(){
+Game::Game() :
+	mInky(&mBlinky, GhostTimer, mPac),
+	mBlinky(GhostTimer, mPac),
+	mPinky(GhostTimer, mPac),
+	mClyde(GhostTimer, mPac) {
 	Ready.loadFromRenderedText("ready!", Yellow);
 	GameOverTexture.loadFromRenderedText("game  over", Red);
 	mBoard.CopyBoard(ActualMap);
@@ -72,6 +77,18 @@ Game::Game(){
 	IsToWakaSound = true;
 	IsToDeathPacSound = true;
 	DeadGhostsCounter = 0;
+	mGhosts[0] = &mBlinky;
+	mGhosts[1] = &mInky;
+	mGhosts[2] = &mPinky;
+	mGhosts[3] = &mClyde;
+	for (auto ghost : mGhosts) {
+		ghost->SetScatterTime(ScatterTime);
+	}
+	mDrawables.push_back(&mPac);
+	mDrawables.push_back(&mInky);
+	mDrawables.push_back(&mBlinky);
+	mDrawables.push_back(&mPinky);
+	mDrawables.push_back(&mClyde);
 }
 
 Game::~Game(){
@@ -80,17 +97,9 @@ Game::~Game(){
 }
 
 void Game::ResetGhostsLifeStatement(){
-	mBlinky.ModLifeStatement(true);
-	mInky.ModLifeStatement(true);
-	mPinky.ModLifeStatement(true);
-	mClyde.ModLifeStatement(true);
-}
-
-void Game::ResetGhostsFacing(){
-	mBlinky.ModFacing(0);
-	mInky.ModFacing(1);
-	mPinky.ModFacing(1);
-	mClyde.ModFacing(1);
+	for (auto ghost : mGhosts) {
+		ghost->ModLifeStatement(true);
+	}
 }
 
 void Game::Start(){
@@ -105,7 +114,6 @@ void Game::Start(){
 		mBoard.ResetPosition(mClyde);
 		mPac.ChangeEnergyStatus(false);
 		this->ResetGhostsLifeStatement();
-		this->ResetGhostsFacing();
 		mPac.ResetCurrentLivingFrame();
 		GhostTimer.Restart();
 		IsGameStarted = true;
@@ -137,11 +145,10 @@ void Game::Clock(){
 }
 
 void Game::UpdatePositions(std::vector <unsigned char> &mover, bool TimedStatus){
-	mBlinky.UpdatePos(ActualMap, mPac, TimedStatus);
-	mInky.UpdatePos(ActualMap, mPac, mBlinky, TimedStatus);
-	mPinky.UpdatePos(ActualMap, mPac, TimedStatus);
-	mClyde.UpdatePos(ActualMap, mPac, TimedStatus);
-	mPac.UpdatePos(mover, ActualMap);	
+	for (auto i = 0; i < 4; ++i) {
+		mGhosts[i]->UpdatePosition(ActualMap, mPac, TimedStatus);
+	}
+	mPac.UpdatePos(mover, ActualMap);
 }
 
 void Game::Food(){
@@ -261,16 +268,16 @@ void Game::ClearMover(std::vector<unsigned char> &mover){
 
 void Game::DeadlyPacGhostColl(){
 	if(
-	   (mPac.IsColliding(mBlinky) && mBlinky.IsAlive()) ||
-	   (mPac.IsColliding(mInky) && mInky.IsAlive()) 	||
-	   (mPac.IsColliding(mPinky) && mPinky.IsAlive())   ||
-	   (mPac.IsColliding(mClyde) && mClyde.IsAlive())
+	   (mPac.IsColliding(mBlinky.GetPos()) && mBlinky.IsAlive()) ||
+	   (mPac.IsColliding(mInky.GetPos()) && mInky.IsAlive()) 	||
+	   (mPac.IsColliding(mPinky.GetPos()) && mPinky.IsAlive())   ||
+	   (mPac.IsColliding(mClyde.GetPos()) && mClyde.IsAlive())
 	)
 	mPac.ModLifeStatement(false);
 }
 
 void Game::DeadlyGhostPacColl(Ghost &mGhost){
-	if(mPac.IsColliding(mGhost) && mGhost.IsAlive()){
+	if(mPac.IsColliding(mGhost.GetPos()) && mGhost.IsAlive()){
 		mGhost.ModLifeStatement(false);
 		mBoard.ScoreIncrease(Scorer);
 		LittleScoreScorers.push_back(Scorer);
@@ -395,11 +402,10 @@ void Game::Draw(){
 	}
 	mFruit.Draw();
 	if(!MapAnimationTimer.isStarted()){
-		mClyde.Draw(mPac, GhostTimer, ScatterTime);
-		mPinky.Draw(mPac, GhostTimer, ScatterTime);
-		mInky.Draw(mPac, GhostTimer, ScatterTime);
-		mBlinky.Draw(mPac, GhostTimer, ScatterTime);
 		this->DrawLittleScore();
 	}
-	mPac.Draw();
+
+	for (auto drawable : mDrawables) {
+		drawable->Draw();
+	}
 }
