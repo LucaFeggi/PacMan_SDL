@@ -20,5 +20,6 @@ target_sources(
   Sources/Position.cpp
   Sources/Entity.cpp
   Sources/Pac.cpp
+  Sources/Ghost.cpp
 )
 target_link_libraries(pacman_sdl ${SDL2_LIBRARIES} SDL2::Main SDL2::Image SDL2::TTF SDL2::Mixer)
