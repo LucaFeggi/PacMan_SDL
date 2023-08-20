@@ -15,5 +15,6 @@ target_sources(
   pacman_sdl PRIVATE
   Sources/main.cpp
   Sources/Globals.cpp
+  Sources/Texture.cpp
 )
 target_link_libraries(pacman_sdl ${SDL2_LIBRARIES} SDL2::Main SDL2::Image SDL2::TTF SDL2::Mixer)
