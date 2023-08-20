@@ -26,5 +26,6 @@ target_sources(
   Sources/Pinky.cpp
   Sources/Clyde.cpp
   Sources/Fruit.cpp
+  Sources/Board.cpp
 )
 target_link_libraries(pacman_sdl ${SDL2_LIBRARIES} SDL2::Main SDL2::Image SDL2::TTF SDL2::Mixer)
