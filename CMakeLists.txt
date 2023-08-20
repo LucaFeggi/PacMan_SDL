@@ -9,8 +9,25 @@ find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
-add_executable(pacman_sdl
-  main.cpp
+add_executable(pacman_sdl)
+target_include_directories(pacman_sdl PRIVATE Headers)
+target_sources(
+  pacman_sdl PRIVATE
+  Sources/main.cpp
+  Sources/Globals.cpp
+  Sources/Texture.cpp
+  Sources/Timer.cpp
+  Sources/Position.cpp
+  Sources/Entity.cpp
+  Sources/Pac.cpp
+  Sources/Ghost.cpp
+  Sources/Blinky.cpp
+  Sources/Inky.cpp
+  Sources/Pinky.cpp
+  Sources/Clyde.cpp
+  Sources/Fruit.cpp
+  Sources/Board.cpp
+  Sources/Sound.cpp
+  Sources/Game.cpp
 )
 target_link_libraries(pacman_sdl ${SDL2_LIBRARIES} SDL2::Main SDL2::Image SDL2::TTF SDL2::Mixer)
-

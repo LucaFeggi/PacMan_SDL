@@ -1,0 +1,9 @@
+# CMake files & directories
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Game generated files
+HighScore.txt
