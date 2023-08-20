@@ -11,5 +11,8 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 add_executable(pacman_sdl)
 target_include_directories(pacman_sdl PRIVATE Headers)
-target_sources(pacman_sdl PRIVATE main.cpp)
+target_sources(
+  pacman_sdl PRIVATE
+  Sources/main.cpp
+)
 target_link_libraries(pacman_sdl ${SDL2_LIBRARIES} SDL2::Main SDL2::Image SDL2::TTF SDL2::Mixer)
