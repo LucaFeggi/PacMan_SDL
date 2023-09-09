@@ -43,14 +43,14 @@ int main(int argc, char* args[]){
 
 	while(!quit){
 
-		uint64_t IterationStart = SDL_GetPerformanceCounter();
+		double IterationStart = SDL_GetPerformanceCounter();
 
 		while(SDL_PollEvent(&event) != 0){
 			if(event.type == SDL_QUIT)
 				quit = true;
 			if(event.key.state == SDL_PRESSED){
-				if((event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d))		mover.push_back(Right);
-				else if((event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)) 	mover.push_back(Up);	
+				if((event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d))			mover.push_back(Right);
+				else if((event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)) 		mover.push_back(Up);
 				else if((event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_a))	mover.push_back(Left);	
 				else if((event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s))	mover.push_back(Down);	
 				if(mover.size() > 2)
@@ -65,10 +65,11 @@ int main(int argc, char* args[]){
 			SDL_RenderPresent(renderer);
 		}
 		
-		uint64_t IterationEnd = SDL_GetPerformanceCounter();
-		float elapsedMS = (IterationEnd - IterationStart) / ((float)SDL_GetPerformanceFrequency() * 1000.0f);
-		SDL_Delay(floor(11.111f - elapsedMS));
-
+		double IterationEnd = SDL_GetPerformanceCounter();
+		double ElapsedSeconds = (IterationEnd - IterationStart) / (double)SDL_GetPerformanceFrequency();
+		double Delay = 16.666f - (ElapsedSeconds * 1000.0f);
+		SDL_Delay(Delay);
+		
 	}
 	
 	CloseSDL();
