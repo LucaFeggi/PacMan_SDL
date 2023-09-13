@@ -94,6 +94,8 @@ class Game {
 		void DeathSound();
 		void ModDeathSoundStatement(bool NewDeathSoundStatement);
 		void DrawLittleScore();
+        
+        bool keyboardProcess();
 
         //  Returns false when
         //  should render the last animation frame.
@@ -103,37 +105,43 @@ class Game {
 
 };
 
-    Game::Game() {
+Game::Game() {
 
-	    mover.push_back(Right);
+    mover.push_back(Right);
 
-	    IsGameStarted = false;
-        
-        // ghost times
-        // ghost away movement time
-	    ScatterTime = 7000;
-        // ghost towards movement time
-	    ChasingTime = 20000;
+    IsGameStarted = false;
+    
+    // ghost times
 
-	    GhostTimerTarget = ChasingTime;
+    // ghost away movement time
+    ScatterTime = 7000;
+    
+    // ghost towards movement time
+    ChasingTime = 20000;
+    GhostTimerTarget = ChasingTime;
 
-	    TimedStatus = false;
-	    Scorer = 200;
-	    LittleTimerTarget = 1000;
-	    Level = 1;
-	    IsToScatterSound = true;
-	    IsToWakaSound = true;
-	    IsToDeathPacSound = true;
-	    DeadGhostsCounter = 0;
 
-	    mSound.PlayIntro();
-	    GameTimer.Start();
-    }
 
-    Game::~Game(){
-	    Ready.free();
-	    GameOverTexture.free();
-    }
+    TimedStatus = false;
+    Scorer = 200;
+    LittleTimerTarget = 1000;
+    Level = 1;
+
+    //  sound
+    IsToScatterSound = true;
+    IsToWakaSound = true;
+    IsToDeathPacSound = true;
+
+    DeadGhostsCounter = 0;
+
+    mSound.PlayIntro();
+    GameTimer.Start();
+}
+
+Game::~Game(){
+    Ready.free();
+    GameOverTexture.free();
+}
 
 void Game::ResetGhostsLifeStatement(){
 	mBlinky.ModLifeStatement(true);
@@ -158,7 +166,8 @@ void Game::Start() {
             // numericboard, starting board, is copied into ActualMap
 			mBoard.CopyBoard();
 		}
-
+        
+        //  starting positions
 		mBoard.ResetPosition(mPac);
 		mBoard.ResetPosition(mBlinky);
 		mBoard.ResetPosition(mInky);
@@ -400,6 +409,24 @@ void Game::DrawLittleScore(){
 	}
 }
 
+bool Game::keyboardProcess() {
+    bool ret;
+    ret = false;
+    // processing of keyboard input
+    while(SDL_PollEvent(&event) != 0){
+    	if(event.type == SDL_QUIT)
+    		ret = true;
+    	if(event.key.state == SDL_PRESSED){
+    		if((event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d))		mover.push_back(Right);
+    		else if((event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)) 	mover.push_back(Up);	
+    		else if((event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_a))	mover.push_back(Left);	
+    		else if((event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s))	mover.push_back(Down);	
+    		if(mover.size() > 2)
+    			mover.erase(mover.begin() + 1);
+    	}
+    }
+    return ret;
+}
 
 bool Game::Process(){
     bool ret = true;
@@ -414,6 +441,7 @@ bool Game::Process(){
     		else {
                 //  animation not started
     			if(!MapAnimationTimer.isStarted()) {
+                    // waiting time
     				if(StartTicksInitial != 2500)
     					StartTicksInitial = 2500;
 

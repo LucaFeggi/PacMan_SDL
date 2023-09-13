@@ -1,4 +1,5 @@
 class Entity : public Position {
+
 	private:
 		unsigned char Identity;
 		unsigned char Speed;

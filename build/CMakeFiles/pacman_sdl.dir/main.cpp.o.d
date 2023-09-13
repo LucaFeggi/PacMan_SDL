@@ -247,18 +247,18 @@ CMakeFiles/pacman_sdl.dir/main.cpp.o: /opt/pacman/PacMan_SDL/main.cpp \
  /usr/include/SDL2/SDL_timer.h /usr/include/SDL2/SDL_version.h \
  /usr/include/SDL2/SDL_image.h /usr/include/SDL2/SDL.h \
  /usr/include/SDL2/SDL_ttf.h /usr/include/SDL2/SDL_mixer.h \
- /opt/pacman/PacMan_SDL/Headers/Globals.hpp \
- /opt/pacman/PacMan_SDL/Headers/Timer.hpp \
- /opt/pacman/PacMan_SDL/Headers/Texture.hpp \
- /opt/pacman/PacMan_SDL/Headers/Position.hpp \
- /opt/pacman/PacMan_SDL/Headers/Entity.hpp \
- /opt/pacman/PacMan_SDL/Headers/Pac.hpp \
- /opt/pacman/PacMan_SDL/Headers/Ghost.hpp \
- /opt/pacman/PacMan_SDL/Headers/Blinky.hpp \
- /opt/pacman/PacMan_SDL/Headers/Inky.hpp \
- /opt/pacman/PacMan_SDL/Headers/Pinky.hpp \
- /opt/pacman/PacMan_SDL/Headers/Clyde.hpp \
- /opt/pacman/PacMan_SDL/Headers/Fruit.hpp \
- /opt/pacman/PacMan_SDL/Headers/Board.hpp \
- /opt/pacman/PacMan_SDL/Headers/Sound.hpp \
- /opt/pacman/PacMan_SDL/Headers/Game.hpp
+ /opt/pacman/PacMan_SDL/headers/Globals.hpp \
+ /opt/pacman/PacMan_SDL/headers/Timer.hpp \
+ /opt/pacman/PacMan_SDL/headers/Texture.hpp \
+ /opt/pacman/PacMan_SDL/headers/Position.hpp \
+ /opt/pacman/PacMan_SDL/headers/Entity.hpp \
+ /opt/pacman/PacMan_SDL/headers/Pac.hpp \
+ /opt/pacman/PacMan_SDL/headers/Ghost.hpp \
+ /opt/pacman/PacMan_SDL/headers/Blinky.hpp \
+ /opt/pacman/PacMan_SDL/headers/Inky.hpp \
+ /opt/pacman/PacMan_SDL/headers/Pinky.hpp \
+ /opt/pacman/PacMan_SDL/headers/Clyde.hpp \
+ /opt/pacman/PacMan_SDL/headers/Fruit.hpp \
+ /opt/pacman/PacMan_SDL/headers/Board.hpp \
+ /opt/pacman/PacMan_SDL/headers/Sound.hpp \
+ /opt/pacman/PacMan_SDL/headers/Game.hpp
