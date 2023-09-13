@@ -32,34 +32,7 @@ int main(int argc, char* args[]){
 	InitializeSDL();
 
 	Game mGame;
-	Timer GameTimer;
-	
-    bool quit = false;
-	unsigned short StartTicks = 4500;
-
-    GameTimer.Start();
-	mGame.mSound.PlayIntro();
-
-	while(!quit){
-
-		double IterationStart = SDL_GetPerformanceCounter();
-
-        quit = mGame.keyboardProcess();
-
-		SDL_RenderClear(renderer);
-
-		if(mGame.Process(GameTimer, StartTicks)){
-			mGame.Draw();
-			SDL_RenderPresent(renderer);
-		}
-		
-		double IterationEnd = SDL_GetPerformanceCounter();
-		double ElapsedSeconds = (IterationEnd - IterationStart) / (double)SDL_GetPerformanceFrequency();
-		double Delay = 16.666f - (ElapsedSeconds * 1000.0f);
-		if (Delay > 0)
-			SDL_Delay(std::max(0, (int) Delay));
-		
-	}
+    mGame.gameLoop();
 	
 	CloseSDL();
 	

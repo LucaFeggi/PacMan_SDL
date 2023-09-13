@@ -22,13 +22,22 @@ class Game{
 		void DeathSound();
 		void ModDeathSoundStatement(bool NewDeathSoundStatement);
 		void DrawLittleScore();
-		bool Process(Timer &GameTimer, unsigned short &StartTicks);
+		bool Process();
         bool keyboardProcess();
 		void Draw();
-		Sound mSound;
+        void gameLoop();
 
+
+        //  keyboard events stored in vector 'mover'
 	    std::vector<unsigned char> mover;
 	    SDL_Event event;
+
+        // initial waiting time when game starts
+	    unsigned short StartTicks = 4500;
+
+	    Timer GameTimer;
+
+		Sound mSound;
 	
 
 	private:
@@ -67,6 +76,9 @@ Game::Game(){
 	Ready.loadFromRenderedText("ready!", Yellow);
 	GameOverTexture.loadFromRenderedText("game  over", Red);
 	mBoard.CopyBoard(ActualMap);
+    GameTimer.Start();
+	mSound.PlayIntro();
+    
 	IsGameStarted = false;
 	ScatterTime = 7000;
 	ChasingTime = 20000;
@@ -344,7 +356,7 @@ bool Game::keyboardProcess() {
 		}
         return ret;
 }
-bool Game::Process(Timer &GameTimer, unsigned short &StartTicks){
+bool Game::Process(){
 	//Returns false when should render the last animation frame.
 	//It's bad looking, so I don't want to render it.
 	if(GameTimer.GetTicks() < StartTicks){
@@ -424,4 +436,28 @@ void Game::Draw(){
 		this->DrawLittleScore();
 	}
 	mPac.Draw();
+}
+
+void Game::gameLoop(){
+    bool quit = false;
+	while(!quit){
+
+		double IterationStart = SDL_GetPerformanceCounter();
+
+        quit = keyboardProcess();
+
+		SDL_RenderClear(renderer);
+
+		if(Process()){
+			Draw();
+			SDL_RenderPresent(renderer);
+		}
+		
+		double IterationEnd = SDL_GetPerformanceCounter();
+		double ElapsedSeconds = (IterationEnd - IterationStart) / (double)SDL_GetPerformanceFrequency();
+		double Delay = 16.666f - (ElapsedSeconds * 1000.0f);
+		if (Delay > 0)
+			SDL_Delay(std::max(0, (int) Delay));
+		
+	}
 }
