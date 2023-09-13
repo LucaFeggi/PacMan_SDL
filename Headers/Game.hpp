@@ -22,9 +22,15 @@ class Game{
 		void DeathSound();
 		void ModDeathSoundStatement(bool NewDeathSoundStatement);
 		void DrawLittleScore();
-		bool Process(Timer &GameTimer, std::vector<unsigned char> &mover, unsigned short &StartTicks);
+		bool Process(Timer &GameTimer, unsigned short &StartTicks);
+        bool keyboardProcess();
 		void Draw();
 		Sound mSound;
+
+	    std::vector<unsigned char> mover;
+	    SDL_Event event;
+	
+
 	private:
 		Board mBoard;
 		Pac mPac;
@@ -57,6 +63,7 @@ class Game{
 };
 
 Game::Game(){
+	mover.push_back(Right);
 	Ready.loadFromRenderedText("ready!", Yellow);
 	GameOverTexture.loadFromRenderedText("game  over", Red);
 	mBoard.CopyBoard(ActualMap);
@@ -321,8 +328,23 @@ void Game::DrawLittleScore(){
 		}
 	}
 }
-
-bool Game::Process(Timer &GameTimer, std::vector<unsigned char> &mover, unsigned short &StartTicks){
+bool Game::keyboardProcess() {
+        bool ret = false;
+		while(SDL_PollEvent(&event) != 0){
+			if(event.type == SDL_QUIT)
+				ret = true;
+			if(event.key.state == SDL_PRESSED){
+				if((event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d))			mover.push_back(Right);
+				else if((event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)) 		mover.push_back(Up);
+				else if((event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_a))	mover.push_back(Left);	
+				else if((event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s))	mover.push_back(Down);	
+				if(mover.size() > 2)
+					mover.erase(mover.begin() + 1);
+			}
+		}
+        return ret;
+}
+bool Game::Process(Timer &GameTimer, unsigned short &StartTicks){
 	//Returns false when should render the last animation frame.
 	//It's bad looking, so I don't want to render it.
 	if(GameTimer.GetTicks() < StartTicks){
