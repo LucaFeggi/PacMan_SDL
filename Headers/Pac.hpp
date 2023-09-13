@@ -1,7 +1,23 @@
 class Pac : public Entity{
+
+	private:
+		LTexture LivingPac;
+		LTexture DeathPac;
+
+		SDL_Rect LivingPacSpriteClips[LivingPacFrames];
+		SDL_Rect DeathPacSpriteClips[DeathPacFrames];
+
+		unsigned char CurrLivingPacFrame;
+		unsigned char CurrDeathPacFrame;
+
+		bool EnergyStatus;
+		bool DeadAnimationStatement;
+
 	public:
+
 		Pac();
 		~Pac();
+
 		void UpdatePos(std::vector<unsigned char> &mover, unsigned char ActualMap[]);
 		unsigned char FoodCollision(unsigned char ActualMap[]);
 		bool IsEnergized();
@@ -13,22 +29,15 @@ class Pac : public Entity{
 		void ResetCurrentLivingFrame();
 		void WallCollisionFrame();
 		void Draw();
-	private:
-		LTexture LivingPac;
-		LTexture DeathPac;
-		SDL_Rect LivingPacSpriteClips[LivingPacFrames];
-		SDL_Rect DeathPacSpriteClips[DeathPacFrames];
-		unsigned char CurrLivingPacFrame;
-		unsigned char CurrDeathPacFrame;
-		bool EnergyStatus;
-		bool DeadAnimationStatement;
 };
 
 Pac::Pac():Entity(EntityType::ePacMan){
 	LivingPac.loadFromFile("Textures/PacMan32.png");
 	DeathPac.loadFromFile("Textures/GameOver32.png");
+
 	InitFrames(LivingPacFrames, LivingPacSpriteClips);
 	InitFrames(DeathPacFrames, DeathPacSpriteClips);
+
 	CurrLivingPacFrame = 0;
 	CurrDeathPacFrame = 0;
 	EnergyStatus = false;
@@ -72,6 +81,7 @@ void Pac::UpdatePos(std::vector<unsigned char> &mover, unsigned char ActualMap[]
 unsigned char Pac::FoodCollision(unsigned char ActualMap[]){
 	float cell_x = this->GetX() / static_cast<float>(BlockSize24);
 	float cell_y = this->GetY() / static_cast<float>(BlockSize24);
+    
 	Position BoardPos;
 	for(unsigned char SideDir = 0; SideDir < 4; SideDir++){
 		this->CharBoardPos(SideDir, BoardPos, cell_x, cell_y);

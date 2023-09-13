@@ -1,23 +1,33 @@
 //Copied from https://lazyfoo.net/tutorials/SDL/ and adapted to my project
 
-class LTexture{
-	public:
-		LTexture();
-		~LTexture();
-		bool loadFromFile(std::string path);
-		bool loadFromRenderedText(std::string textureText, SDL_Color textColor, bool IsLittle = 0);
-		void free();
-		void setColor(uint8_t red, uint8_t green, uint8_t blue);
-		void setBlendMode(SDL_BlendMode blending);
-		void setAlpha(uint8_t alpha);
-		void render(short x = 0, short y = 0, unsigned char facing = 0, SDL_Rect* clip = NULL);
-		int getWidth();
-		int getHeight();
+class LTexture {
 	private:
 		SDL_Texture* mTexture;
 		unsigned short mWidth;
 		unsigned short mHeight;
+
+	public:
+		LTexture();
+		~LTexture();
+
+		bool loadFromFile(std::string path);
+		bool loadFromRenderedText(std::string textureText, SDL_Color textColor, bool IsLittle = 0);
+        
+		void setColor(uint8_t red, uint8_t green, uint8_t blue);
+		void setAlpha(uint8_t alpha);
+		
+        void setBlendMode(SDL_BlendMode blending);
+
+		void render(short x = 0, short y = 0, unsigned char facing = 0, SDL_Rect* clip = NULL);
+
+		int getWidth();
+		int getHeight();
+
+		void free();
+
 };
+
+
 
 LTexture::LTexture(){
 	mTexture = NULL;
@@ -29,24 +39,32 @@ LTexture::~LTexture(){
 	free();
 }
 
-bool LTexture::loadFromFile(std::string path){
-	//Get rid of preexisting texture
+
+bool LTexture::loadFromFile(std::string path) {
+
 	free();
 
-	//The final texture
+	// The final texture
 	SDL_Texture* newTexture = NULL;
 
-	//Load image at specified path
+	// Load image at specified path
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+
 	if(loadedSurface == NULL){
 		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
 	}
 	else{
-		//Color key image
-		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
+		// Color key image
+		SDL_SetColorKey(loadedSurface, 
+                        SDL_TRUE, 
+                        SDL_MapRGB(loadedSurface->format, 
+                        0, 
+                        0xFF, 
+                        0xFF));
 
 		//Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+
 		if(newTexture == NULL){
 			printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
 		}
@@ -64,7 +82,7 @@ bool LTexture::loadFromFile(std::string path){
 }
 
 bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor, bool IsLittle){
-	//Get rid of preexisting texture
+
 	free();
 
 	//Render text surface
@@ -91,6 +109,10 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 	return mTexture != NULL;
 }
 
+
+
+
+//Get rid of preexisting texture
 void LTexture::free(){
 	if(mTexture != NULL){
 		SDL_DestroyTexture(mTexture);

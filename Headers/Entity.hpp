@@ -1,11 +1,22 @@
-class Entity : public Position{
+class Entity : public Position {
+	private:
+		unsigned char Identity;
+		unsigned char Speed;
+		unsigned char Direction;
+		unsigned char Facing;
+		bool LifeStatement;
+
 	public:
+
 		Entity(EntityType MyIdentity);
+
 		unsigned char GetIdentity();
 		unsigned char GetSpeed();
 		unsigned char GetDirection();
 		unsigned char GetFacing();
+
 		bool IsAlive();
+
 		void ModSpeed(unsigned char NewSpeed);
 		void ModDirection(unsigned char NewDirection);
 		void ModFacing(unsigned char NewFacing);
@@ -16,12 +27,6 @@ class Entity : public Position{
 		void Move(unsigned char mover);
 		void CheckWrap();
 		bool IsColliding(Position other);
-	private:
-		unsigned char Identity;
-		unsigned char Speed;
-		unsigned char Direction;
-		unsigned char Facing;
-		bool LifeStatement;
 };
 
 Entity::Entity(EntityType MyIdentity){

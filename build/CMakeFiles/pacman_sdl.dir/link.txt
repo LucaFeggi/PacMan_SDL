@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/pacman_sdl.dir/main.cpp.o -o pacman_sdl  /usr/lib/x86_64-linux-gnu/libSDL2main.a /usr/lib/x86_64-linux-gnu/libSDL2.so -lpthread /usr/lib/x86_64-linux-gnu/libSDL2_image.so /usr/lib/x86_64-linux-gnu/libSDL2_ttf.so /usr/lib/x86_64-linux-gnu/libSDL2_mixer.so /usr/lib/x86_64-linux-gnu/libSDL2main.a /usr/lib/x86_64-linux-gnu/libSDL2.so -lpthread 

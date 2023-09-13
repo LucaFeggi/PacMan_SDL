@@ -1,16 +1,88 @@
-class Game{
+class Game {
+
+	private:
+        // PRIVATE ATRIBUTES
+        
+        // first first live screen wait time
+	    unsigned short StartTicksInitial = 4500;
+
+
+        // board
+		Board mBoard;
+        
+        // characters
+		Pac mPac;
+		Blinky mBlinky;
+		Inky mInky;
+		Pinky mPinky;
+		Clyde mClyde;
+		Fruit mFruit;
+        
+        // timers
+	    Timer GameTimer;
+		Timer MapAnimationTimer;
+		Timer GhostTimer;
+        //  ghost chasing timer
+		Timer WakaTimer;
+        
+        // texture
+        LTexture Ready;
+		LTexture GameOverTexture;
+        
+
+		bool IsGameStarted;
+		bool TimedStatus;
+		bool IsToDeathPacSound;
+		bool IsToScatterSound;
+		bool IsToWakaSound;
+
+        
+        // chasing ghost times
+		unsigned short ScatterTime;
+		unsigned short ChasingTime;
+		unsigned short GhostTimerTarget;
+
+		unsigned short Scorer;
+		unsigned short LittleTimerTarget;
+		unsigned short Level;
+		unsigned char DeadGhostsCounter;
+
+		std::vector<Timer> LittleScoreTimer;
+		std::vector<Position> LittleScorePositions;
+		std::vector<unsigned short> LittleScoreScorers;
+
+		Sound mSound;
+
+
 	public:
-		Game();
-		~Game();
+        
+        // PUBLIC ATTRIBUTES
+
+	    std::vector<unsigned char> mover;
+        
+        // PUBLIC METHODS 
+
+        // constructor
+        Game();
+        ~Game();
+        
+        // start game
+		void Start();
+
 		void ResetGhostsLifeStatement();
 		void ResetGhostsFacing();
-		void Start();
+
+
 		void ModStartStatement(bool NewStartStatement);
+
 		void Clock();
+
 		void UpdatePositions(std::vector<unsigned char> &mover, bool TimedStatus);
 		void Food();
 		void EntityCollisions();
-		void Update(std::vector<unsigned char> &mover);
+
+		void Update();
+
 		unsigned short GetLevel();
 		void IncreaseLevel();
 		void UpdateDifficulty();
@@ -22,62 +94,46 @@ class Game{
 		void DeathSound();
 		void ModDeathSoundStatement(bool NewDeathSoundStatement);
 		void DrawLittleScore();
-		bool Process(Timer &GameTimer, std::vector<unsigned char> &mover, unsigned short &StartTicks);
+
+        //  Returns false when
+        //  should render the last animation frame.
+        //  It's bad looking, so I don't want to render it.
+		bool Process();
 		void Draw();
-		Sound mSound;
-	private:
-		Board mBoard;
-		Pac mPac;
-		Blinky mBlinky;
-		Inky mInky;
-		Pinky mPinky;
-		Clyde mClyde;
-		Fruit mFruit;
-		Timer MapAnimationTimer;
-		LTexture Ready;
-		LTexture GameOverTexture;
-		unsigned char ActualMap[BoardHeight * BoardWidth];
-		bool IsGameStarted;
-		Timer GhostTimer;
-		unsigned short ScatterTime;
-		unsigned short ChasingTime;
-		unsigned short GhostTimerTarget;
-		bool TimedStatus;
-		unsigned short Scorer;
-		std::vector<Timer> LittleScoreTimer;
-		std::vector<Position> LittleScorePositions;
-		std::vector<unsigned short> LittleScoreScorers;
-		unsigned short LittleTimerTarget;
-		unsigned short Level;
-		bool IsToScatterSound;
-		bool IsToWakaSound;
-		Timer WakaTimer;
-		bool IsToDeathPacSound;
-		unsigned char DeadGhostsCounter;
+
 };
 
-Game::Game(){
-	Ready.loadFromRenderedText("ready!", Yellow);
-	GameOverTexture.loadFromRenderedText("game  over", Red);
-	mBoard.CopyBoard(ActualMap);
-	IsGameStarted = false;
-	ScatterTime = 7000;
-	ChasingTime = 20000;
-	GhostTimerTarget = ChasingTime;
-	TimedStatus = false;
-	Scorer = 200;
-	LittleTimerTarget = 1000;
-	Level = 1;
-	IsToScatterSound = true;
-	IsToWakaSound = true;
-	IsToDeathPacSound = true;
-	DeadGhostsCounter = 0;
-}
+    Game::Game() {
 
-Game::~Game(){
-	Ready.free();
-	GameOverTexture.free();
-}
+	    mover.push_back(Right);
+
+	    IsGameStarted = false;
+        
+        // ghost times
+        // ghost away movement time
+	    ScatterTime = 7000;
+        // ghost towards movement time
+	    ChasingTime = 20000;
+
+	    GhostTimerTarget = ChasingTime;
+
+	    TimedStatus = false;
+	    Scorer = 200;
+	    LittleTimerTarget = 1000;
+	    Level = 1;
+	    IsToScatterSound = true;
+	    IsToWakaSound = true;
+	    IsToDeathPacSound = true;
+	    DeadGhostsCounter = 0;
+
+	    mSound.PlayIntro();
+	    GameTimer.Start();
+    }
+
+    Game::~Game(){
+	    Ready.free();
+	    GameOverTexture.free();
+    }
 
 void Game::ResetGhostsLifeStatement(){
 	mBlinky.ModLifeStatement(true);
@@ -93,24 +149,36 @@ void Game::ResetGhostsFacing(){
 	mClyde.ModFacing(1);
 }
 
-void Game::Start(){
-	if(!IsGameStarted){
+// new game
+void Game::Start() {
+    // game not started
+	if(!IsGameStarted) {
+        // level completed
 		if(this->IsLevelCompleted()){
-			mBoard.CopyBoard(ActualMap);
+            // numericboard, starting board, is copied into ActualMap
+			mBoard.CopyBoard();
 		}
+
 		mBoard.ResetPosition(mPac);
 		mBoard.ResetPosition(mBlinky);
 		mBoard.ResetPosition(mInky);
 		mBoard.ResetPosition(mPinky);
 		mBoard.ResetPosition(mClyde);
+
 		mPac.ChangeEnergyStatus(false);
+
 		this->ResetGhostsLifeStatement();
 		this->ResetGhostsFacing();
+
 		mPac.ResetCurrentLivingFrame();
-		GhostTimer.Restart();
+	    
+        // ghost timer
+        GhostTimer.Restart();
 		IsGameStarted = true;
 		GhostTimer.Start();
 	}
+
+	Ready.loadFromRenderedText("ready!", Yellow);
 	Ready.render(11 * BlockSize24, 20 * BlockSize24 - 5);
 }
 
@@ -119,11 +187,13 @@ void Game::ModStartStatement(bool NewStartStatement){
 }
 
 void Game::Clock(){
-	if(GhostTimer.GetTicks() > GhostTimerTarget){
+	if(GhostTimer.GetTicks() > GhostTimerTarget) {
 		if(GhostTimerTarget == ScatterTime){
+            // deenergize pacman
 			if(mPac.IsEnergized()){
 				mPac.ChangeEnergyStatus(false);
 			}
+
 			TimedStatus = false;
 			GhostTimerTarget = ChasingTime;
 			GhostTimer.Restart();
@@ -137,33 +207,39 @@ void Game::Clock(){
 }
 
 void Game::UpdatePositions(std::vector <unsigned char> &mover, bool TimedStatus){
-	mBlinky.UpdatePos(ActualMap, mPac, TimedStatus);
-	mInky.UpdatePos(ActualMap, mPac, mBlinky, TimedStatus);
-	mPinky.UpdatePos(ActualMap, mPac, TimedStatus);
-	mClyde.UpdatePos(ActualMap, mPac, TimedStatus);
-	mPac.UpdatePos(mover, ActualMap);	
+	mBlinky.UpdatePos(  mBoard.ActualMap, mPac, TimedStatus);
+	mInky.UpdatePos(    mBoard.ActualMap, mPac, mBlinky, TimedStatus);
+	mPinky.UpdatePos(   mBoard.ActualMap, mPac, TimedStatus);
+	mClyde.UpdatePos(   mBoard.ActualMap, mPac, TimedStatus);
+
+	mPac.UpdatePos(mover, mBoard.ActualMap);	
 }
 
 void Game::Food(){
-	switch(mPac.FoodCollision(ActualMap)){
+	switch(mPac.FoodCollision(mBoard.ActualMap)){
 		case 0:
 			mBoard.ScoreIncrease(0);
 			mFruit.UpdateFoodCounter();
+
 			if(IsToWakaSound){
-				mSound.PlayWaka();
+				this->mSound.PlayWaka();
 				IsToWakaSound = false;
 			}
+
 			WakaTimer.Reset();
 			break;
 		case 1:
 			mBoard.ScoreIncrease(1);
 			mFruit.UpdateFoodCounter();
+
 			mPac.ChangeEnergyStatus(true);
 			Scorer = 200;
+
 			GhostTimerTarget = ScatterTime;
 			GhostTimer.Restart();
+
 			if(IsToWakaSound){
-				mSound.PlayWaka();
+				this->mSound.PlayWaka();
 				IsToWakaSound = false;
 			}
 			WakaTimer.Reset();
@@ -174,7 +250,7 @@ void Game::Food(){
 			break;
 	}
 	if(WakaTimer.GetTicks() > 300){
-		mSound.StopWaka();
+		this->mSound.StopWaka();
 		IsToWakaSound = true;
 	}
 }
@@ -190,7 +266,7 @@ void Game::EntityCollisions(){
 	}
 	else{
 		if(IsToScatterSound){
-			mSound.PlayScatterGhost();
+			this->mSound.PlayScatterGhost();
 			IsToScatterSound = false;
 		}
 		this->DeadlyGhostPacColl(mBlinky);
@@ -217,10 +293,12 @@ void Game::EntityCollisions(){
 	}
 }
 
-void Game::Update(std::vector <unsigned char> &mover){
+void Game::Update(){
 	this->Clock();
 	this->UpdatePositions(mover, TimedStatus);
+
 	this->Food();
+
 	if(mBoard.IsExtraLife())
 		mSound.PlayExtraLife();
 	this->EntityCollisions();
@@ -245,9 +323,9 @@ void Game::UpdateDifficulty(){
 
 bool Game::IsLevelCompleted(){
 	for(unsigned short i = 0; i < BoardHeight * BoardWidth; i++){
-		if(ActualMap[i] == BlockType::Pellet)
+		if(mBoard.ActualMap[i] == BlockType::Pellet)
 			return false;
-		if(ActualMap[i] == BlockType::Energizer)
+		if(mBoard.ActualMap[i] == BlockType::Energizer)
 			return false;
 	}
 	return true;
@@ -322,84 +400,107 @@ void Game::DrawLittleScore(){
 	}
 }
 
-bool Game::Process(Timer &GameTimer, std::vector<unsigned char> &mover, unsigned short &StartTicks){
-	//Returns false when should render the last animation frame.
-	//It's bad looking, so I don't want to render it.
-	if(GameTimer.GetTicks() < StartTicks){
-			this->Start();
-		}
-		else{
-			if(mPac.IsAlive()){
-				if(!this->IsLevelCompleted()){
-					this->Update(mover);
-				}
-				else{
-					if(!MapAnimationTimer.isStarted()){
-						if(StartTicks != 2500)
-							StartTicks = 2500;
-						mPac.ResetCurrentLivingFrame();
-						mFruit.Despawn();
-						mFruit.ResetFoodCounter();
-						mSound.StopWaka();
-						mSound.StopScatterGhost();
-						this->ModToWaka(true);
-						MapAnimationTimer.Start();
-					}
-					else if(MapAnimationTimer.GetTicks() > 2100){
-						this->ClearMover(mover);
-						this->IncreaseLevel();
-						mFruit.ModCurrentFruit(this->GetLevel());
-						UpdateDifficulty();
-						this->ModStartStatement(false);
-						MapAnimationTimer.Reset();
-						GameTimer.Start();
-						return false;
-					}
-				}
-			}
-			else{
-				if(mBoard.GetLives() > 0){
-					if(mPac.IsDeadAnimationEnded()){
-						if(StartTicks != 2500)
-							StartTicks = 2500;
-						this->ClearMover(mover);
-						mPac.ModDeadAnimationStatement(false);
-						mPac.ModLifeStatement(true);
-						mBoard.DecreaseLives();
-						mFruit.Despawn();
-						this->ModToWaka(true);
-						this->ModDeathSoundStatement(true);
-						this->ModStartStatement(false);
-						GameTimer.Restart();
-						return false;
-					}
-				}
-				else{
-					if(mPac.IsDeadAnimationEnded()){
-						this->ModStartStatement(false);
-					}
-				}
-				this->DeathSound();
-			}
-		}
-	return true;
+
+bool Game::Process(){
+    bool ret = true;
+
+        // pacman is alife
+    	if (mPac.IsAlive()) {
+            // level uncomplete: pellets and energizers left
+    		if(!this->IsLevelCompleted()) {
+    			this->Update();
+    		}
+            // level complete
+    		else {
+                //  animation not started
+    			if(!MapAnimationTimer.isStarted()) {
+    				if(StartTicksInitial != 2500)
+    					StartTicksInitial = 2500;
+
+    		        mPac.ResetCurrentLivingFrame();
+
+    		        mFruit.Despawn();
+    		        mFruit.ResetFoodCounter();
+
+    		        mSound.StopWaka();
+    		        mSound.StopScatterGhost();
+
+    		        this->ModToWaka(true);
+
+    		        MapAnimationTimer.Start();
+    			}
+                // animation started
+    			else if (MapAnimationTimer.GetTicks() > 2100) {
+    				this->ClearMover(mover);
+    				this->IncreaseLevel();
+    				mFruit.ModCurrentFruit(this->GetLevel());
+    				UpdateDifficulty();
+    				this->ModStartStatement(false);
+    				MapAnimationTimer.Reset();
+    				GameTimer.Start();
+    				ret = false;
+    			}
+    		}
+    	}
+        // pacman is not alive
+    	else {
+            // some lives left
+    		if (mBoard.GetLives() > 0) {
+    			if(mPac.IsDeadAnimationEnded()){
+    				if(StartTicksInitial != 2500)
+    					StartTicksInitial = 2500;
+    				this->ClearMover(mover);
+    				mPac.ModDeadAnimationStatement(false);
+    				mPac.ModLifeStatement(true);
+    				mBoard.DecreaseLives();
+    				mFruit.Despawn();
+    				this->ModToWaka(true);
+    				this->ModDeathSoundStatement(true);
+    				this->ModStartStatement(false);
+    				GameTimer.Restart();
+                    Start();
+    				ret = false;
+    			}
+    		}
+            // no lives left
+    		else {
+    			if (mPac.IsDeadAnimationEnded()){
+    				this->ModStartStatement(false);
+    			}
+    		}
+    		this->DeathSound();
+    	}
+
+	SDL_RenderClear(renderer);
+
+    if (ret) {
+	    Draw();
+	    SDL_RenderPresent(renderer);
+    }
+
+	return ret;
 }
 
 void Game::Draw(){
 	mBoard.SetHighScore();
 	mBoard.SetScore();
-	mBoard.Draw(ActualMap, MapAnimationTimer);
+	mBoard.Draw(mBoard.ActualMap, MapAnimationTimer);
+
 	if(!IsGameStarted){
+	    GameOverTexture.loadFromRenderedText("game  over", Red);
 		GameOverTexture.render(9 * BlockSize24, 20 * BlockSize24 - 5);
 		return;
 	}
+
 	mFruit.Draw();
+
 	if(!MapAnimationTimer.isStarted()){
-		mClyde.Draw(mPac, GhostTimer, ScatterTime);
-		mPinky.Draw(mPac, GhostTimer, ScatterTime);
-		mInky.Draw(mPac, GhostTimer, ScatterTime);
-		mBlinky.Draw(mPac, GhostTimer, ScatterTime);
+		mClyde.Draw(    mPac,   GhostTimer, ScatterTime);
+		mPinky.Draw(    mPac,   GhostTimer, ScatterTime);
+		mInky.Draw(     mPac,   GhostTimer, ScatterTime);
+		mBlinky.Draw(   mPac,   GhostTimer, ScatterTime);
 		this->DrawLittleScore();
 	}
+
 	mPac.Draw();
 }

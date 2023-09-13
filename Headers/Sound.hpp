@@ -1,4 +1,13 @@
 class Sound{
+	private:
+		Mix_Chunk* Intro;
+		Mix_Chunk* EatFruit;
+		Mix_Chunk* ExtraLife;
+		Mix_Chunk* PacDeath;
+		Mix_Chunk* GhostDeath;
+		Mix_Chunk* ScatterGhost;
+		Mix_Chunk* Waka;
+
 	public:
 		Sound();
 		~Sound();
@@ -11,14 +20,6 @@ class Sound{
 		void StopScatterGhost(){Mix_HaltChannel(5);}
 		void PlayWaka(){Mix_PlayChannel(6, Waka, -1);}
 		void StopWaka(){Mix_HaltChannel(6);}
-	private:
-		Mix_Chunk* Intro;
-		Mix_Chunk* EatFruit;
-		Mix_Chunk* ExtraLife;
-		Mix_Chunk* PacDeath;
-		Mix_Chunk* GhostDeath;
-		Mix_Chunk* ScatterGhost;
-		Mix_Chunk* Waka;
 };
 
 Sound::Sound(){

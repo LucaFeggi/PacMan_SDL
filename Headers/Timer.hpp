@@ -1,21 +1,31 @@
 //Copied from https://lazyfoo.net/tutorials/SDL/ and adapted to my project
 
 class Timer{
+    private:
+		bool Started;
+		bool Paused;
+
+        //Ticks since stop
+		uint32_t PausedTicks;   
+
     public:
+        //Ticks since start
+		uint32_t StartTicks;
+        
+        // public methods
 		Timer();
 		void Start();
 		void Reset();
 		void Restart();
 		void Pause();
 		void Unpause();
+
 		uint32_t GetTicks();
+
+        // queries
 		bool isStarted();
 		bool isPaused();
-    private:
-		uint32_t StartTicks;	//Ticks since start
-		uint32_t PausedTicks;   //Ticks since stop
-		bool Paused;
-		bool Started;
+
 };
 
 Timer::Timer(){
@@ -72,6 +82,10 @@ uint32_t Timer::GetTicks(){
     }
     return time;
 }
+
+
+
+
 
 bool Timer::isStarted(){
     return Started;

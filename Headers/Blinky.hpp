@@ -2,7 +2,7 @@ class Blinky : public Ghost{
 	public:
 		Blinky();
 		void CalculateTarget(Position mPac);
-		void UpdatePos(unsigned char ActualBoard[], Pac &mPac, bool TimedStatus);
+		void UpdatePos(unsigned char ActualMap[], Pac &mPac, bool TimedStatus);
 };
 
 Blinky::Blinky() : Ghost(Red, EntityType::eBlinky){
@@ -14,14 +14,19 @@ void Blinky::CalculateTarget(Position mPac){
 	this->Target.ModPos(mPac.GetPos());
 }
 
-void Blinky::UpdatePos(unsigned char ActualBoard[], Pac &mPac, bool TimedStatus){
+void Blinky::UpdatePos(unsigned char ActualMap[], Pac &mPac, bool TimedStatus){
 	this->UpdateSpeed(mPac);
 	this->UpdateStatus(mPac, TimedStatus);
+
 	for(unsigned char i = 0; i < this->GetSpeed(); i++){
 		this->UpdateFacing(mPac);
+
 		if(this->IsTargetToCalculate(mPac))
 			this->CalculateTarget(mPac);
-		this->CalculateDirection(ActualBoard);
+        
+        // actualmap
+		this->CalculateDirection(ActualMap);
+
 		this->Move(this->GetDirection());
 		this->CheckWrap();
 	}

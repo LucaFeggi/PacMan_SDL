@@ -1,0 +1,3 @@
+/opt/pacman/PacMan_SDL/build/CMakeFiles/pacman_sdl.dir
+/opt/pacman/PacMan_SDL/build/CMakeFiles/edit_cache.dir
+/opt/pacman/PacMan_SDL/build/CMakeFiles/rebuild_cache.dir

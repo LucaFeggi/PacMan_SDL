@@ -1,4 +1,14 @@
 class Ghost : public Entity{
+	private:
+		LTexture Body;
+		LTexture Eyes;
+		SDL_Rect GhostBodySpriteClips[GhostBodyFrames];
+		SDL_Rect GhostEyeSpriteClips[GhostEyeFrames];
+		SDL_Color Color;
+		unsigned char CurrentBodyFrame;
+		bool CanUseDoor;
+		bool Status; // false -> chase	true -> scatter
+
 	public:
 		Ghost(SDL_Color MyColor, EntityType MyIdentity);
 		~Ghost();
@@ -15,15 +25,7 @@ class Ghost : public Entity{
 		Position ScatterTarget;
 		Position DoorTarget;
 		Position Home;
-	private:
-		LTexture Body;
-		LTexture Eyes;
-		SDL_Rect GhostBodySpriteClips[GhostBodyFrames];
-		SDL_Rect GhostEyeSpriteClips[GhostEyeFrames];
-		SDL_Color Color;
-		unsigned char CurrentBodyFrame;
-		bool CanUseDoor;
-		bool Status; // false -> chase	true -> scatter
+
 };
 
 Ghost::Ghost(SDL_Color MyColor, EntityType MyIdentity) : Entity(MyIdentity){
@@ -96,10 +98,13 @@ void Ghost::PossDirsBubbleSort(std::vector<float> &Distances, std::vector<unsign
 void Ghost::CalculateDirection(unsigned char ActualMap[]){
 	std::vector<float> Distances;
 	std::vector<unsigned char> PossibleDirections;
-	for(unsigned char i = 0; i < 4; i++){
+
+	for(unsigned char i = 0; i < 4; i++) {
+
 		short x = this->GetX();
 		short y = this->GetY();
 		this->GetPossiblePosition(x, y, i);
+
 		if(!this->WallCollision(x, y, ActualMap, CanUseDoor)){
 			float DistX = abs(x - this->Target.GetX());
 			if(DistX > WindowWidth / 2)
@@ -110,14 +115,14 @@ void Ghost::CalculateDirection(unsigned char ActualMap[]){
 		}
 	}
 
-	if(PossibleDirections.size() == 1){
+	if (PossibleDirections.size() == 1) {
 		this->ModDirection(PossibleDirections.at(0));
 		return;
 	}
 	
 	this->PossDirsBubbleSort(Distances, PossibleDirections);
 	
-	for(unsigned char i = 0; i < PossibleDirections.size(); i++){
+	for (unsigned char i = 0; i < PossibleDirections.size(); i++){
 		if(PossibleDirections.at(i) != (this->GetDirection() + 2) % 4){
 			this->ModDirection(PossibleDirections.at(i));
 			return;
