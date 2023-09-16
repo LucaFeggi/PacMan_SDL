@@ -1,3 +1,23 @@
+#include <sstream>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+#include "../Headers/Globals.hpp"
+#include "../Headers/Texture.hpp"
+#include "../Headers/Timer.hpp"
+#include "../Headers/Position.hpp"
+#include "../Headers/Entity.hpp"
+#include "../Headers/Pac.hpp"
+#include "../Headers/Ghost.hpp"
+#include "../Headers/Blinky.hpp"
+#include "../Headers/Inky.hpp"
+#include "../Headers/Pinky.hpp"
+#include "../Headers/Clyde.hpp"
+#include "../Headers/Fruit.hpp"
+#include "../Headers/Board.hpp"
+#include "../Headers/Sound.hpp"
+
 class Game{
 	public:
 		Game();
@@ -42,12 +62,14 @@ class Game{
 
 	private:
 		Board mBoard;
+
 		Pac mPac;
 		Blinky mBlinky;
 		Inky mInky;
 		Pinky mPinky;
 		Clyde mClyde;
 		Fruit mFruit;
+
 		Timer MapAnimationTimer;
 		LTexture Ready;
 		LTexture GameOverTexture;
@@ -96,6 +118,7 @@ Game::Game(){
 Game::~Game(){
 	Ready.free();
 	GameOverTexture.free();
+
 }
 
 void Game::ResetGhostsLifeStatement(){
