@@ -7,10 +7,7 @@ class Fruit : public Position{
 		bool IsEatable();
 		unsigned short GetScoreValue();
 		void StartScoreTimer();
-
-        // comment: ResetScoreTimer() not used anywhere
-		//void ResetScoreTimer();
-
+		void ResetScoreTimer();
 		bool CheckDespawn();
 		void Despawn();
 		void ResetFoodCounter();
@@ -69,11 +66,10 @@ void Fruit::StartScoreTimer(){
 	ScoreTimer.Start();
 }
 
-// comment: ResetScoreTimer() not used anywhere
-// void Fruit::ResetScoreTimer(){
-// 	if(ScoreTimer.GetTicks() > 1000)
-// 		ScoreTimer.Reset();
-// }
+void Fruit::ResetScoreTimer(){
+	if(ScoreTimer.GetTicks() > 1000)
+		ScoreTimer.Reset();
+}
 
 bool Fruit::CheckDespawn(){
 	if(FruitTimer.GetTicks() > FruitDuration)
