@@ -94,9 +94,9 @@ class Game{
 };
 
 Game::Game(){
-	mover.push_back(Right);
+    // orginal arcade pacman starts moving left
+	mover.push_back(Left);
 	Ready.loadFromRenderedText("ready!", Yellow);
-	GameOverTexture.loadFromRenderedText("game  over", Red);
 	mBoard.CopyBoard(ActualMap);
     GameTimer.Start();
 	mSound.PlayIntro();
@@ -447,6 +447,7 @@ void Game::Draw(){
 	mBoard.SetScore();
 	mBoard.Draw(ActualMap, MapAnimationTimer);
 	if(!IsGameStarted){
+	    GameOverTexture.loadFromRenderedText("game  over", Red);
 		GameOverTexture.render(9 * BlockSize24, 20 * BlockSize24 - 5);
 		return;
 	}
