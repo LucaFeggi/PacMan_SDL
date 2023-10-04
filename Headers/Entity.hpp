@@ -116,10 +116,10 @@ bool Entity::WallCollision(short x, short y, unsigned char ActualMap[], bool Can
 	Position BoardPos;
 	for(unsigned char SideDir = 0; SideDir < 4; SideDir++){
 		this->CharBoardPos(SideDir, BoardPos, cell_x, cell_y);
-		if(BlockType::Wall == ActualMap[BoardWidth * BoardPos.GetY() + abs(BoardPos.GetX() % BoardWidth)]){
+		if(BlockType::Wall == ActualMap[BoardWidth * BoardPos.GetY() + BoardPos.GetX()]){
 			return true;
 		}
-		else if (BlockType::Door == ActualMap[BoardWidth * BoardPos.GetY() + abs(BoardPos.GetX() % BoardWidth)]){
+		else if (BlockType::Door == ActualMap[BoardWidth * BoardPos.GetY() + BoardPos.GetX()]){
 			if(CanUseDoor)
 				return false;
 			else

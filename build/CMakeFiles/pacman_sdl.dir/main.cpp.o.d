@@ -1,7 +1,8 @@
-CMakeFiles/pacman_sdl.dir/main.cpp.o: /opt/PacMan_SDL/main.cpp \
- /usr/include/stdc-predef.h /opt/PacMan_SDL/Headers/Game.hpp \
- /usr/include/c++/9/sstream /usr/include/c++/9/istream \
- /usr/include/c++/9/ios /usr/include/c++/9/iosfwd \
+CMakeFiles/pacman_sdl.dir/main.cpp.o: \
+ /opt/github_fork/PacMan_SDL/main.cpp /usr/include/stdc-predef.h \
+ /opt/github_fork/PacMan_SDL/Headers/Game.hpp /usr/include/c++/9/sstream \
+ /usr/include/c++/9/istream /usr/include/c++/9/ios \
+ /usr/include/c++/9/iosfwd \
  /usr/include/x86_64-linux-gnu/c++/9/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/9/bits/os_defines.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
@@ -154,9 +155,9 @@ CMakeFiles/pacman_sdl.dir/main.cpp.o: /opt/PacMan_SDL/main.cpp \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /opt/PacMan_SDL/Headers/../Headers/Globals.hpp /usr/include/SDL2/SDL.h \
- /usr/include/SDL2/SDL_main.h /usr/include/SDL2/SDL_stdinc.h \
- /usr/include/SDL2/SDL_config.h \
+ /opt/github_fork/PacMan_SDL/Headers/./Globals.hpp \
+ /usr/include/SDL2/SDL.h /usr/include/SDL2/SDL_main.h \
+ /usr/include/SDL2/SDL_stdinc.h /usr/include/SDL2/SDL_config.h \
  /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
  /usr/include/SDL2/SDL_platform.h /usr/include/SDL2/begin_code.h \
  /usr/include/SDL2/close_code.h /usr/include/c++/9/stdlib.h \
@@ -248,16 +249,16 @@ CMakeFiles/pacman_sdl.dir/main.cpp.o: /opt/PacMan_SDL/main.cpp \
  /usr/include/SDL2/SDL_timer.h /usr/include/SDL2/SDL_version.h \
  /usr/include/SDL2/SDL_image.h /usr/include/SDL2/SDL.h \
  /usr/include/SDL2/SDL_ttf.h /usr/include/SDL2/SDL_mixer.h \
- /opt/PacMan_SDL/Headers/../Headers/Texture.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Timer.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Position.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Entity.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Pac.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Ghost.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Blinky.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Inky.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Pinky.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Clyde.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Fruit.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Board.hpp \
- /opt/PacMan_SDL/Headers/../Headers/Sound.hpp
+ /opt/github_fork/PacMan_SDL/Headers/./Texture.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Timer.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Position.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Entity.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Pac.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Ghost.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Blinky.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Inky.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Pinky.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Clyde.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Fruit.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Board.hpp \
+ /opt/github_fork/PacMan_SDL/Headers/./Sound.hpp

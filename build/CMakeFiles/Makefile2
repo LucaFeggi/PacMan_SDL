@@ -54,10 +54,10 @@ RM = /usr/local/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /opt/PacMan_SDL
+CMAKE_SOURCE_DIR = /opt/github_fork/PacMan_SDL
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /opt/PacMan_SDL/build
+CMAKE_BINARY_DIR = /opt/github_fork/PacMan_SDL/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -81,14 +81,14 @@ clean: CMakeFiles/pacman_sdl.dir/clean
 CMakeFiles/pacman_sdl.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pacman_sdl.dir/build.make CMakeFiles/pacman_sdl.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pacman_sdl.dir/build.make CMakeFiles/pacman_sdl.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/opt/PacMan_SDL/build/CMakeFiles --progress-num=1,2 "Built target pacman_sdl"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/opt/github_fork/PacMan_SDL/build/CMakeFiles --progress-num=1,2 "Built target pacman_sdl"
 .PHONY : CMakeFiles/pacman_sdl.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/pacman_sdl.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /opt/PacMan_SDL/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /opt/github_fork/PacMan_SDL/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/pacman_sdl.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /opt/PacMan_SDL/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /opt/github_fork/PacMan_SDL/build/CMakeFiles 0
 .PHONY : CMakeFiles/pacman_sdl.dir/rule
 
 # Convenience name for target.

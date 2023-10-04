@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/opt/PacMan_SDL/main.cpp" "CMakeFiles/pacman_sdl.dir/main.cpp.o" "gcc" "CMakeFiles/pacman_sdl.dir/main.cpp.o.d"
+  "/opt/github_fork/PacMan_SDL/main.cpp" "CMakeFiles/pacman_sdl.dir/main.cpp.o" "gcc" "CMakeFiles/pacman_sdl.dir/main.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
