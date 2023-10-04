@@ -1,3 +1,0 @@
-/opt/github_fork/PacMan_SDL/build/CMakeFiles/pacman_sdl.dir
-/opt/github_fork/PacMan_SDL/build/CMakeFiles/edit_cache.dir
-/opt/github_fork/PacMan_SDL/build/CMakeFiles/rebuild_cache.dir
