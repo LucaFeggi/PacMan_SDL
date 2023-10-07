@@ -1,3 +1,23 @@
+#include <sstream>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+#include "./Globals.hpp"
+#include "./Texture.hpp"
+#include "./Timer.hpp"
+#include "./Position.hpp"
+#include "./Entity.hpp"
+#include "./Pac.hpp"
+#include "./Ghost.hpp"
+#include "./Blinky.hpp"
+#include "./Inky.hpp"
+#include "./Pinky.hpp"
+#include "./Clyde.hpp"
+#include "./Fruit.hpp"
+#include "./Board.hpp"
+#include "./Sound.hpp"
+
 class Game{
 	public:
 		Game();
@@ -22,17 +42,34 @@ class Game{
 		void DeathSound();
 		void ModDeathSoundStatement(bool NewDeathSoundStatement);
 		void DrawLittleScore();
-		bool Process(Timer &GameTimer, std::vector<unsigned char> &mover, unsigned short &StartTicks);
+		bool Process();
+        bool keyboardProcess();
 		void Draw();
+        void gameLoop();
+
+
+        //  keyboard events stored in vector 'mover'
+	    std::vector<unsigned char> mover;
+	    SDL_Event event;
+
+        // initial waiting time when game starts
+	    unsigned short StartTicks = 4500;
+
+	    Timer GameTimer;
+
 		Sound mSound;
+	
+
 	private:
 		Board mBoard;
+
 		Pac mPac;
 		Blinky mBlinky;
 		Inky mInky;
 		Pinky mPinky;
 		Clyde mClyde;
 		Fruit mFruit;
+
 		Timer MapAnimationTimer;
 		LTexture Ready;
 		LTexture GameOverTexture;
@@ -57,9 +94,13 @@ class Game{
 };
 
 Game::Game(){
+    // orginal arcade pacman starts moving left
+	mover.push_back(Left);
 	Ready.loadFromRenderedText("ready!", Yellow);
-	GameOverTexture.loadFromRenderedText("game  over", Red);
 	mBoard.CopyBoard(ActualMap);
+    GameTimer.Start();
+	mSound.PlayIntro();
+    
 	IsGameStarted = false;
 	ScatterTime = 7000;
 	ChasingTime = 20000;
@@ -77,6 +118,7 @@ Game::Game(){
 Game::~Game(){
 	Ready.free();
 	GameOverTexture.free();
+
 }
 
 void Game::ResetGhostsLifeStatement(){
@@ -321,8 +363,23 @@ void Game::DrawLittleScore(){
 		}
 	}
 }
-
-bool Game::Process(Timer &GameTimer, std::vector<unsigned char> &mover, unsigned short &StartTicks){
+bool Game::keyboardProcess() {
+        bool ret = false;
+		while(SDL_PollEvent(&event) != 0){
+			if(event.type == SDL_QUIT)
+				ret = true;
+			if(event.key.state == SDL_PRESSED){
+				if((event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d))			mover.push_back(Right);
+				else if((event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)) 		mover.push_back(Up);
+				else if((event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_a))	mover.push_back(Left);	
+				else if((event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s))	mover.push_back(Down);	
+				if(mover.size() > 2)
+					mover.erase(mover.begin() + 1);
+			}
+		}
+        return ret;
+}
+bool Game::Process(){
 	//Returns false when should render the last animation frame.
 	//It's bad looking, so I don't want to render it.
 	if(GameTimer.GetTicks() < StartTicks){
@@ -390,6 +447,7 @@ void Game::Draw(){
 	mBoard.SetScore();
 	mBoard.Draw(ActualMap, MapAnimationTimer);
 	if(!IsGameStarted){
+	    GameOverTexture.loadFromRenderedText("game  over", Red);
 		GameOverTexture.render(9 * BlockSize24, 20 * BlockSize24 - 5);
 		return;
 	}
@@ -402,4 +460,28 @@ void Game::Draw(){
 		this->DrawLittleScore();
 	}
 	mPac.Draw();
+}
+
+void Game::gameLoop(){
+    bool quit = false;
+	while(!quit){
+
+		double IterationStart = SDL_GetPerformanceCounter();
+
+        quit = keyboardProcess();
+
+		SDL_RenderClear(renderer);
+
+		if(Process()){
+			Draw();
+			SDL_RenderPresent(renderer);
+		}
+		
+		double IterationEnd = SDL_GetPerformanceCounter();
+		double ElapsedSeconds = (IterationEnd - IterationStart) / (double)SDL_GetPerformanceFrequency();
+		double Delay = 16.666f - (ElapsedSeconds * 1000.0f);
+		if (Delay > 0)
+			SDL_Delay(std::max(0, (int) Delay));
+		
+	}
 }

@@ -1,3 +1,10 @@
+#include <string>
+
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+#include <SDL_mixer.h>
+
 const unsigned char BoardWidth = 28;
 const unsigned char BoardHeight = 36;
 const unsigned char BlockSize32 = 32;
