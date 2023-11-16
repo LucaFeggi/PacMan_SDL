@@ -221,10 +221,10 @@ void Ghost::Draw(Pac &mPac, Timer mGhostTimer, unsigned short mTimerTarget){
 		
 	if(this->IsAlive()){
 		CurrentClip = &GhostBodySpriteClips[CurrentBodyFrame / GhostBodyFrames];
-		Body.render(this->GetX() - 4, this->GetY() - 4, 0, CurrentClip);
+		Body.render((this->GetX()-4)*scale, (this->GetY()-4)*scale, 0, CurrentClip);
 	}
 	CurrentClip = &GhostEyeSpriteClips[this->GetFacing()];
-	Eyes.render(this->GetX() - 4, this->GetY() - 4, 0, CurrentClip);
+	Eyes.render((this->GetX()-4)*scale, (this->GetY()-4)*scale, 0, CurrentClip);
 	CurrentBodyFrame++;
 	if(CurrentBodyFrame / GhostBodyFrames >= GhostBodyFrames){
 		CurrentBodyFrame = 0;

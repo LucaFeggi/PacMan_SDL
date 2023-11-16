@@ -111,7 +111,7 @@ void Game::Start(){
 		IsGameStarted = true;
 		GhostTimer.Start();
 	}
-	Ready.render(11 * BlockSize24, 20 * BlockSize24 - 5);
+	Ready.render((11*BlockSize24)*scale, (20*BlockSize24-5)*scale);
 }
 
 void Game::ModStartStatement(bool NewStartStatement){
@@ -311,7 +311,7 @@ void Game::DrawLittleScore(){
 			ss << LittleScoreScorers.at(i);
 			ThisLilTexture.loadFromRenderedText(ss.str(), White, 1);
 			Position ThisLilPos = LittleScorePositions.at(i);
-			ThisLilTexture.render(ThisLilPos.GetX(), ThisLilPos.GetY() - BlockSize24/2 );
+			ThisLilTexture.render(ThisLilPos.GetX()*scale, (ThisLilPos.GetY()-BlockSize24/2)*scale);
 			ThisLilTexture.free();
 		}
 		else{
@@ -390,7 +390,7 @@ void Game::Draw(){
 	mBoard.SetScore();
 	mBoard.Draw(ActualMap, MapAnimationTimer);
 	if(!IsGameStarted){
-		GameOverTexture.render(9 * BlockSize24, 20 * BlockSize24 - 5);
+		GameOverTexture.render((9*BlockSize24)*scale, (20*BlockSize24-5)*scale);
 		return;
 	}
 	mFruit.Draw();

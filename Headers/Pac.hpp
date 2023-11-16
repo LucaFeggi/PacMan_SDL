@@ -140,11 +140,11 @@ void Pac::WallCollisionFrame(){
 void Pac::Draw(){
 	if(this->IsAlive()){
 		CurrentClip = &LivingPacSpriteClips[CurrLivingPacFrame / (LivingPacFrames * 4)];
-		LivingPac.render(this->GetX() - 4, this->GetY() - 4, this->GetFacing(), CurrentClip);
+		LivingPac.render((this->GetX()-4)*scale, (this->GetY()-4)*scale, this->GetFacing(), CurrentClip);
 	}
 	else{
 		CurrentClip = &DeathPacSpriteClips[CurrDeathPacFrame / DeathPacFrames];
-		DeathPac.render(this->GetX() - 4, this->GetY() - 4, this->GetFacing(), CurrentClip);
+		DeathPac.render((this->GetX()-4)*scale, (this->GetY()-4)*scale, this->GetFacing(), CurrentClip);
 		CurrDeathPacFrame++;
 		if(CurrDeathPacFrame / DeathPacFrames >= DeathPacFrames){
 			DeadAnimationStatement = true;
