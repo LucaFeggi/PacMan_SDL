@@ -44,7 +44,9 @@ void Pac::UpdatePos(std::vector<unsigned char> &mover, unsigned char ActualMap[]
 	for(unsigned char i = 0; i < this->GetSpeed(); i++){
 		short TempX = this->GetX();
 		short TempY = this->GetY();
+
 		this->GetPossiblePosition(TempX, TempY, mover.at(0));
+
 		if(!this->WallCollision(TempX, TempY, ActualMap)){
 			this->UpdateCurrentLivingPacFrame();
 			this->Move(mover.at(0));
@@ -53,10 +55,13 @@ void Pac::UpdatePos(std::vector<unsigned char> &mover, unsigned char ActualMap[]
 		}
 		else
 			this->WallCollisionFrame();
+
 		if(mover.size() != 1 && mover.at(0) != mover.at(1)){
 			TempX = this->GetX();
 			TempY = this->GetY();
+
 			this->GetPossiblePosition(TempX, TempY, mover.at(1));
+
 			if(!this->WallCollision(TempX, TempY, ActualMap)){
 				this->UpdateCurrentLivingPacFrame();
 				this->Move(mover.at(1));

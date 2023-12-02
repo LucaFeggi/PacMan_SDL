@@ -2,8 +2,12 @@ class Game{
 	public:
 		Game();
 		~Game();
+        void ResetLevel();
+        void ResetPacmanLives();
 		void ResetGhostsLifeStatement();
 		void ResetGhostsFacing();
+        void ResetScore();
+        bool IsPacmanAlive();
 		void Start();
 		void ModStartStatement(bool NewStartStatement);
 		void Clock();
@@ -25,8 +29,10 @@ class Game{
 		bool Process(Timer &GameTimer, std::vector<unsigned char> &mover, unsigned short &StartTicks);
 		void Draw();
 		Sound mSound;
+
 	private:
 		Board mBoard;
+		unsigned char ActualMap[BoardHeight * BoardWidth];
 		Pac mPac;
 		Blinky mBlinky;
 		Inky mInky;
@@ -36,7 +42,7 @@ class Game{
 		Timer MapAnimationTimer;
 		LTexture Ready;
 		LTexture GameOverTexture;
-		unsigned char ActualMap[BoardHeight * BoardWidth];
+		LTexture PushBarTexture;
 		bool IsGameStarted;
 		Timer GhostTimer;
 		unsigned short ScatterTime;
@@ -59,6 +65,7 @@ class Game{
 Game::Game(){
 	Ready.loadFromRenderedText("ready!", Yellow);
 	GameOverTexture.loadFromRenderedText("game  over", Red);
+	PushBarTexture.loadFromRenderedText("push bar!", Green);
 	mBoard.CopyBoard(ActualMap);
 	IsGameStarted = false;
 	ScatterTime = 7000;
@@ -77,13 +84,25 @@ Game::Game(){
 Game::~Game(){
 	Ready.free();
 	GameOverTexture.free();
+	PushBarTexture.free();
 }
 
+void Game::ResetPacmanLives() {
+    mBoard.ResetPacmanLives();
+}
 void Game::ResetGhostsLifeStatement(){
 	mBlinky.ModLifeStatement(true);
 	mInky.ModLifeStatement(true);
 	mPinky.ModLifeStatement(true);
 	mClyde.ModLifeStatement(true);
+}
+
+void Game::ResetScore() {
+    mBoard.ResetScore();
+}
+
+void Game::ResetLevel() {
+    Level = 1;
 }
 
 void Game::ResetGhostsFacing(){
@@ -93,9 +112,13 @@ void Game::ResetGhostsFacing(){
 	mClyde.ModFacing(1);
 }
 
+bool Game::IsPacmanAlive() {
+    return mPac.IsAlive();
+}
+
 void Game::Start(){
 	if(!IsGameStarted){
-		if(this->IsLevelCompleted()){
+		if(this->IsLevelCompleted() || !mPac.IsAlive()){
 			mBoard.CopyBoard(ActualMap);
 		}
 		mBoard.ResetPosition(mPac);
@@ -391,6 +414,7 @@ void Game::Draw(){
 	mBoard.Draw(ActualMap, MapAnimationTimer);
 	if(!IsGameStarted){
 		GameOverTexture.render((9*BlockSize24)*scale, (20*BlockSize24-5)*scale);
+	    PushBarTexture.render((10*BlockSize24)*scale, (14*BlockSize24-5)*scale);
 		return;
 	}
 	mFruit.Draw();

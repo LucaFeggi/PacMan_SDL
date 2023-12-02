@@ -29,7 +29,8 @@
 
 int main(int argc, char* args[]){
 
-	InitializeSDL();
+    InitializeSDL();
+
 	Game mGame;
 	Timer GameTimer;
 	SDL_Event event;
@@ -66,11 +67,19 @@ int main(int argc, char* args[]){
                 }
             }
             else if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
-			    if (event.key.state == SDL_PRESSED) {
-			    	if((event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d))			mover.push_back(Right);
-			    	else if((event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)) 		mover.push_back(Up);
-			    	else if((event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_a))	mover.push_back(Left);	
-			    	else if((event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s))	mover.push_back(Down);	
+			    if(event.key.state == SDL_PRESSED){
+			    	if((event.key.keysym.sym == SDLK_RIGHT      || event.key.keysym.sym == SDLK_d))		mover.push_back(Right);
+			    	else if((event.key.keysym.sym == SDLK_UP    || event.key.keysym.sym == SDLK_w)) 	mover.push_back(Up);
+			    	else if((event.key.keysym.sym == SDLK_LEFT  || event.key.keysym.sym == SDLK_a))	    mover.push_back(Left);	
+			    	else if((event.key.keysym.sym == SDLK_DOWN  || event.key.keysym.sym == SDLK_s))	    mover.push_back(Down);	
+			    	else if(!mGame.IsPacmanAlive() && event.key.keysym.sym == SDLK_SPACE){
+                        mGame.ModStartStatement(false);
+                        mGame.ResetScore();
+                        mGame.ResetPacmanLives();
+                        mGame.ResetLevel();
+                        mGame.Start();
+	                    mGame.mSound.PlayIntro();
+                    }	
 			    	if(mover.size() > 2)
 			    		mover.erase(mover.begin() + 1);
 			    }
