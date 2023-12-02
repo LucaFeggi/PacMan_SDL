@@ -19,4 +19,7 @@ docker build -t pacman_sdl .
 xhost + local:docker
 docker run -it --rm --env="DISPLAY" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" pacman_sdl /ws/build/pacman_sdl
 ```
+### Screenshots 
+![Pacman Game](./screenshot1.png)
+![Pacman Game Push Bar to Play Again](./screenshot2.png)
 

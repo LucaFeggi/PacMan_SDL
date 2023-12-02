@@ -29,7 +29,7 @@
 
 int main(int argc, char* args[]){
 
-	InitializeSDL();
+    InitializeSDL();
 
 	Game mGame;
 	Timer GameTimer;
@@ -45,17 +45,45 @@ int main(int argc, char* args[]){
 
 		double IterationStart = SDL_GetPerformanceCounter();
 
-		while(SDL_PollEvent(&event) != 0){
-			if(event.type == SDL_QUIT)
+		while(SDL_PollEvent(&event) != 0) {
+			if (event.type == SDL_QUIT)
 				quit = true;
-			if(event.key.state == SDL_PRESSED){
-				if((event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d))			mover.push_back(Right);
-				else if((event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)) 		mover.push_back(Up);
-				else if((event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_a))	mover.push_back(Left);	
-				else if((event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s))	mover.push_back(Down);	
-				if(mover.size() > 2)
-					mover.erase(mover.begin() + 1);
-			}
+            // continue reading: https://gamedev.stackexchange.com/questions/124379/how-can-i-resize-sdl2-windows-efficiently
+            else if (event.type == SDL_WINDOWEVENT) {
+                if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+                    int windoww2;
+                    int windowh2;
+                    SDL_GetWindowSize(window, &windoww2, &windowh2);
+
+                    float scalex = 1.0*(float)windoww2/(float)windoww1;
+                    float scaley = 1.0*(float)windowh2/(float)windowh1;
+
+                    if (scalex <= scaley)
+                        scale = scalex;
+                    else
+                        scale = scaley;
+
+                    SDL_UpdateWindowSurface(window);
+                }
+            }
+            else if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
+			    if(event.key.state == SDL_PRESSED){
+			    	if((event.key.keysym.sym == SDLK_RIGHT      || event.key.keysym.sym == SDLK_d))		mover.push_back(Right);
+			    	else if((event.key.keysym.sym == SDLK_UP    || event.key.keysym.sym == SDLK_w)) 	mover.push_back(Up);
+			    	else if((event.key.keysym.sym == SDLK_LEFT  || event.key.keysym.sym == SDLK_a))	    mover.push_back(Left);	
+			    	else if((event.key.keysym.sym == SDLK_DOWN  || event.key.keysym.sym == SDLK_s))	    mover.push_back(Down);	
+			    	else if(!mGame.IsPacmanAlive() && event.key.keysym.sym == SDLK_SPACE){
+                        mGame.ModStartStatement(false);
+                        mGame.ResetScore();
+                        mGame.ResetPacmanLives();
+                        mGame.ResetLevel();
+                        mGame.Start();
+	                    mGame.mSound.PlayIntro();
+                    }	
+			    	if(mover.size() > 2)
+			    		mover.erase(mover.begin() + 1);
+			    }
+            }
 		}
 
 		SDL_RenderClear(renderer);

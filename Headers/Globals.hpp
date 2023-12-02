@@ -2,8 +2,12 @@ const unsigned char BoardWidth = 28;
 const unsigned char BoardHeight = 36;
 const unsigned char BlockSize32 = 32;
 const unsigned char BlockSize24 = 24;
-const unsigned short WindowWidth = BoardWidth * BlockSize24;
-const unsigned short WindowHeight = BoardHeight * BlockSize24;
+const int WindowWidth = BoardWidth * BlockSize24;
+const int WindowHeight = BoardHeight * BlockSize24;
+
+int windoww1;
+int windowh1;
+float scale = 1.0;
 
 const std::string CharBoard =
 	"                            "
@@ -58,6 +62,8 @@ const SDL_Color Red = {0xff, 0x00, 0x00};
 const SDL_Color Cyan = {0x00, 192, 0xff};
 const SDL_Color Pink = {0xff, 192, 203};
 const SDL_Color Orange = {0xff, 128, 0x00};
+const SDL_Color Blue = {0x00, 0x00, 0xff};
+const SDL_Color Green = {0x00, 0xff, 0x00};
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
@@ -74,12 +80,15 @@ enum Direction{
 };
 
 enum EntityType{
-	ePacMan, eBlinky, eInky, ePinky, eClyde, Noone
+	ePacMan, eBlinky, eInky, ePinky, eClyde, None
 };
 
 void InitializeSDL(){
+
 	SDL_Init(SDL_INIT_VIDEO);
+
 	window = SDL_CreateWindow("PacMan", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WindowWidth, WindowHeight, SDL_WINDOW_SHOWN);
+    SDL_SetWindowResizable(window, SDL_TRUE);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	int imgFlags = IMG_INIT_PNG;
 	IMG_Init(imgFlags);
@@ -87,6 +96,8 @@ void InitializeSDL(){
 	Font = TTF_OpenFont("Fonts/emulogic.ttf", BlockSize24);
 	LittleFont = TTF_OpenFont("Fonts/VpPixel.ttf", 20);
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+
+    SDL_GetWindowSize(window, &windoww1, &windowh1);
 }
 
 void CloseSDL(){

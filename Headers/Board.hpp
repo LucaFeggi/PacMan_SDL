@@ -5,6 +5,8 @@ class Board{
 		void ConvertSketch();
 		void CopyBoard(unsigned char ActualMap[]);
 		void ResetPosition(Entity &ThisEntity);
+        void ResetPacmanLives();
+        void ResetScore();
 		void SetScore();
 		void SetHighScore();
 		bool IsExtraLife();
@@ -112,6 +114,13 @@ void Board::ResetPosition(Entity &mEntity){
 	}
 }
 
+void Board::ResetScore() {
+    Score = 0;
+}
+
+void Board::ResetPacmanLives() {
+    Lives = 5;
+}
 void Board::SetScore(){
 	std::stringstream ss;
 	ss << Score;
@@ -135,25 +144,26 @@ void Board::SetHighScore(){
 }
 
 void Board::Draw(unsigned char ActualMap[], Timer MapAnimationTimer){
-	ScoreWordTexture.render();
-	ScoreTexture.render(0, BlockSize32);
-	HighScoreWordTexture.render(336);
-	HighScoreTexture.render(336, BlockSize32);
+	ScoreWordTexture.render(0, 0);
+	HighScoreWordTexture.render(336*scale, 0);
+	ScoreTexture.render(0, BlockSize32*scale);
+	HighScoreTexture.render(336*scale, BlockSize32*scale);
 	MapTexture.render();
+
 	for(unsigned char i = 1; i <= Lives; i++){
-		LivesTexture.render(i * BlockSize32, 26 * BlockSize32 - BlockSize32/4);
+		LivesTexture.render((i*BlockSize32)*scale, (26*BlockSize32-BlockSize32/4)*scale);
 	}
 	if(!MapAnimationTimer.isStarted()){
-		DoorTexture.render(WindowWidth/2 - 23, WindowHeight/2 - 57);
+		DoorTexture.render((WindowWidth/2 - 23)*scale, (WindowHeight/2 - 57)*scale);
 		char y = -1;
 		for(unsigned short i = 0; i < BoardHeight * BoardWidth; i++){
 			unsigned char x = i % BoardWidth;
 			if(x == 0)
 				y++;
 			if(ActualMap[i] == BlockType::Pellet)
-				PelletTexture.render(x * BlockSize24, y * BlockSize24);
+				PelletTexture.render((x*BlockSize24)*scale, y*BlockSize24*scale);
 			if(ActualMap[i] == BlockType::Energizer)
-				EnergizerTexture.render(x * BlockSize24, y * BlockSize24);
+				EnergizerTexture.render(x*BlockSize24*scale, y*BlockSize24*scale);
 		}
 	}
 	else{	

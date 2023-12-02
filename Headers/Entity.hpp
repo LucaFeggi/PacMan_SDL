@@ -10,9 +10,11 @@ class Entity : public Position{
 		void ModDirection(unsigned char NewDirection);
 		void ModFacing(unsigned char NewFacing);
 		void ModLifeStatement(bool NewLifeStatement);	
+
 		void GetPossiblePosition(short &x, short &y, unsigned char mover);
 		void CharBoardPos(unsigned char SideDir, Position &BoardPos, float cell_x, float cell_y);
 		bool WallCollision(short x, short y, unsigned char ActualMap[] , bool CanUseDoor = 0);
+
 		void Move(unsigned char mover);
 		void CheckWrap();
 		bool IsColliding(Position other);
@@ -114,7 +116,7 @@ bool Entity::WallCollision(short x, short y, unsigned char ActualMap[], bool Can
 	float cell_x = x / static_cast<float>(BlockSize24);
 	float cell_y = y / static_cast<float>(BlockSize24);
 	Position BoardPos;
-	for(unsigned char SideDir = 0; SideDir < 4; SideDir++){
+	for (unsigned char SideDir = 0; SideDir < 4; SideDir++) {
 		this->CharBoardPos(SideDir, BoardPos, cell_x, cell_y);
 		if(BlockType::Wall == ActualMap[BoardWidth * BoardPos.GetY() + abs(BoardPos.GetX() % BoardWidth)]){
 			return true;

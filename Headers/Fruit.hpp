@@ -88,14 +88,15 @@ void Fruit::ResetFoodCounter(){
 void Fruit::Draw(){
 	if(FruitTimer.isStarted()){
 		CurrentClip = &FruitSpriteClips[CurrentFruit];
-		FruitTexture.render(this->GetX() - 4, this->GetY() - 4, 0, CurrentClip);	
+		FruitTexture.render((this->GetX()-4)*scale, (this->GetY()- 4)*scale, 0, CurrentClip);	
 	}
+
 	if(ScoreTimer.isStarted() && ScoreTimer.GetTicks() < 1000){
 		std::stringstream ss;
 		ss << ScoreTable[CurrentFruit];
 		LTexture ScoreTexture;
 		ScoreTexture.loadFromRenderedText(ss.str(), White, 1);
-		ScoreTexture.render(this->GetX(), this->GetY() - BlockSize24 / 2);
+		ScoreTexture.render((this->GetX())*scale, (this->GetY() - BlockSize24 / 2)*scale);
 		ScoreTexture.free();
 	}
 }
